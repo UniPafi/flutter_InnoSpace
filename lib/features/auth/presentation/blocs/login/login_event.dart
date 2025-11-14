@@ -17,3 +17,8 @@ class LoginPasswordChanged extends LoginEvent {
 }
 
 class LoginSubmitted extends LoginEvent {}
+
+// ---
+// AÑADIR ESTE NUEVO EVENTO
+// ---
+class LoginReset extends LoginEvent {}

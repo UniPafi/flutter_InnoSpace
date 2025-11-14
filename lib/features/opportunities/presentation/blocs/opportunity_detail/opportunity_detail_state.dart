@@ -1,0 +1,32 @@
+part of 'opportunity_detail_bloc.dart';
+
+class OpportunityDetailState extends Equatable {
+  final Status status;
+  final Opportunity? opportunity;
+  final String? errorMessage;
+  final bool isDeleted; // <-- AÑADIDO
+
+  const OpportunityDetailState({
+    this.status = Status.initial,
+    this.opportunity,
+    this.errorMessage,
+    this.isDeleted = false, // <-- AÑADIDO
+  });
+
+  OpportunityDetailState copyWith({
+    Status? status,
+    Opportunity? opportunity,
+    String? errorMessage,
+    bool? isDeleted, // <-- AÑADIDO
+  }) {
+    return OpportunityDetailState(
+      status: status ?? this.status,
+      opportunity: opportunity ?? this.opportunity,
+      errorMessage: errorMessage ?? this.errorMessage,
+      isDeleted: isDeleted ?? this.isDeleted, // <-- AÑADIDO
+    );
+  }
+
+  @override
+  List<Object?> get props => [status, opportunity, errorMessage, isDeleted]; // <-- AÑADIDO
+}

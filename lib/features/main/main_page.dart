@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import '../auth/domain/repositories/auth_repository.dart'; 
+import 'package:flutter_innospace/features/opportunities/domain/repositories/opportunity_repository.dart';
+import 'package:flutter_innospace/features/opportunities/presentation/blocs/opportunity_list/opportunity_list_bloc.dart';
+import 'package:flutter_innospace/features/opportunities/presentation/pages/opportunities_page.dart';
+// ---
+// AÑADIR EL IMPORT DEL LOGIN BLOC
+// ---
+import 'package:flutter_innospace/features/auth/presentation/blocs/login/login_bloc.dart';
+
 
 // ---
-// Placeholders de las páginas (Explore, Opportunities, Requests)
+// Placeholders (Explore, Requests)
 // ---
 class ExplorePage extends StatelessWidget { 
   const ExplorePage({super.key}); 
   @override 
-  Widget build(BuildContext context) => Scaffold( // <-- CORRECCIÓN: 'const' eliminado
+  Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: const Text('Explorar Proyectos')),
         body: const Center(child: Text('Explorar Proyectos')),
-      ); 
-}
-
-class OpportunitiesPage extends StatelessWidget { 
-  const OpportunitiesPage({super.key}); 
-  @override 
-  Widget build(BuildContext context) => Scaffold( // <-- CORRECCIÓN: 'const' eliminado
-        appBar: AppBar(title: const Text('Mis Convocatorias')),
-        body: const Center(child: Text('Mis Convocatorias')),
       ); 
 }
 
 class RequestsPage extends StatelessWidget { 
   const RequestsPage({super.key}); 
   @override 
-  Widget build(BuildContext context) => Scaffold( // <-- CORRECCIÓN: 'const' eliminado
+  Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: const Text('Solicitudes')),
         body: const Center(child: Text('Solicitudes (Próximamente)')),
       ); 
@@ -37,7 +37,7 @@ class RequestsPage extends StatelessWidget {
 
 
 // ---
-// Página de Perfil (con la corrección de 'mounted')
+// Página de Perfil
 // ---
 class ProfilePage extends StatelessWidget { 
   const ProfilePage({super.key}); 
@@ -57,12 +57,19 @@ class ProfilePage extends StatelessWidget {
           ),
           child: const Text('Cerrar Sesión'),
           onPressed: () async {
+            // ---
+            // ¡CORRECCIÓN! Obtenemos el LoginBloc
+            // ---
             final authRepo = context.read<AuthRepository>();
+            final loginBloc = context.read<LoginBloc>();
+            
             await authRepo.signOut();
+            
+            // ---
+            // ¡CORRECIÓN! Disparamos el evento de reseteo
+            // ---
+            loginBloc.add(LoginReset());
 
-            // ---
-            // ¡CORRECCIÓN! Chequeamos si el widget sigue "montado"
-            // ---
             if (context.mounted) {
               Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
             }
@@ -87,12 +94,15 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
 
-  // Las 4 pantallas
-  static const List<Widget> _widgetOptions = <Widget>[
-    ExplorePage(),
-    OpportunitiesPage(),
-    RequestsPage(),
-    ProfilePage(),
+  // Las 4 pantallas (Sin cambios)
+  static final List<Widget> _widgetOptions = <Widget>[
+    const ExplorePage(),
+    BlocProvider<OpportunityListBloc>(
+      create: (context) => OpportunityListBloc(context.read<OpportunityRepository>()),
+      child: const OpportunitiesPage(),
+    ),
+    const RequestsPage(),
+    const ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
