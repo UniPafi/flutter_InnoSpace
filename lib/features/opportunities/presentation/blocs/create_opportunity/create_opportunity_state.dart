@@ -3,16 +3,16 @@ part of 'create_opportunity_bloc.dart';
 class CreateOpportunityState extends Equatable {
   final Status status;
   final String title;
-  final String summary; // <-- CORREGIDO A 2 'm'
+  final String summary; 
   final String description;
   final String category;
-  final String requirements; // Simple string por ahora
+  final String requirements; 
   final String? errorMessage;
 
   const CreateOpportunityState({
     this.status = Status.initial,
     this.title = '',
-    this.summary = '', // <-- CORREGIDO A 2 'm'
+    this.summary = '', 
     this.description = '',
     this.category = '',
     this.requirements = '',
@@ -22,7 +22,7 @@ class CreateOpportunityState extends Equatable {
   CreateOpportunityState copyWith({
     Status? status,
     String? title,
-    String? summary, // <-- CORREGIDO A 2 'm'
+    String? summary, 
     String? description,
     String? category,
     String? requirements,
@@ -31,7 +31,7 @@ class CreateOpportunityState extends Equatable {
     return CreateOpportunityState(
       status: status ?? this.status,
       title: title ?? this.title,
-      summary: summary ?? this.summary, // <-- CORREGIDO A 2 'm'
+      summary: summary ?? this.summary, 
       description: description ?? this.description,
       category: category ?? this.category,
       requirements: requirements ?? this.requirements,
@@ -40,5 +40,5 @@ class CreateOpportunityState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, title, summary, description, category, requirements, errorMessage]; // <-- CORREGIDO A 2 'm'
+  List<Object?> get props => [status, title, summary, description, category, requirements, errorMessage]; 
 }

@@ -10,7 +10,7 @@ import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
 import 'features/main/main_page.dart';
 
-// ¡NUEVOS IMPORTS!
+
 import 'features/opportunities/data/repositories/opportunity_repository_impl.dart';
 import 'features/opportunities/data/services/opportunity_service.dart';
 import 'features/opportunities/domain/repositories/opportunity_repository.dart';
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // --- Singletons (Servicios y Utilidades) ---
+      
         Provider<http.Client>(
           create: (_) => http.Client(),
           dispose: (_, client) => client.close(), 
@@ -43,7 +43,6 @@ class MyApp extends StatelessWidget {
           create: (_) => SessionManager(prefs),
         ),
         
-        // --- Servicios de API (Clases con http) ---
         ProxyProvider<http.Client, AuthService>(
           update: (_, client, __) => AuthService(client),
         ),
@@ -51,7 +50,6 @@ class MyApp extends StatelessWidget {
           update: (_, client, __) => OpportunityService(client),
         ),
 
-        // --- Repositorios (Implementaciones) ---
         ProxyProvider2<AuthService, SessionManager, AuthRepository>(
           update: (_, authService, sessionManager, __) =>
               AuthRepositoryImpl(authService, sessionManager),
@@ -61,7 +59,6 @@ class MyApp extends StatelessWidget {
               OpportunityRepositoryImpl(oppService, sessionManager),
         ),
 
-        // --- BLoCs (Solo BLoCs de páginas, los de feature se proveen en la ruta) ---
         BlocProvider<LoginBloc>(
           create: (context) => LoginBloc(context.read<AuthRepository>()),
         ),
@@ -76,7 +73,6 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         
-        // --- Lógica de Rutas (Sin cambios) ---
         initialRoute: '/',
         routes: {
           '/': (context) {
@@ -89,8 +85,7 @@ class MyApp extends StatelessWidget {
           '/login': (context) => const LoginPage(),
           '/register': (context) => const RegisterPage(),
           '/main': (context) => const MainPage(),
-          // NOTA: Las rutas de detalle y crear las manejamos con MaterialPageRoute
-          // para poder pasar argumentos (como el ID) fácilmente.
+        
         },
       ),
     );

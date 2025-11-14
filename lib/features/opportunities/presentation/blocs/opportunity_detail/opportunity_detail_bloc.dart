@@ -14,7 +14,7 @@ class OpportunityDetailBloc extends Bloc<OpportunityDetailEvent, OpportunityDeta
     on<FetchOpportunityDetail>(_onFetchDetail);
     on<PublishOpportunity>(_onPublish);
     on<CloseOpportunity>(_onClose);
-    on<DeleteOpportunity>(_onDelete); // <-- AÑADIDO
+    on<DeleteOpportunity>(_onDelete); 
   }
 
   Future<void> _onFetchDetail(
@@ -58,9 +58,7 @@ class OpportunityDetailBloc extends Bloc<OpportunityDetailEvent, OpportunityDeta
     }
   }
 
-  // ---
-  // ¡NUEVO MANEJADOR AÑADIDO!
-  // ---
+  
   Future<void> _onDelete(
     DeleteOpportunity event,
     Emitter<OpportunityDetailState> emit,
@@ -69,7 +67,7 @@ class OpportunityDetailBloc extends Bloc<OpportunityDetailEvent, OpportunityDeta
     emit(state.copyWith(status: Status.loading));
     try {
       await _repository.deleteOpportunity(state.opportunity!.id);
-      emit(state.copyWith(status: Status.success, isDeleted: true)); // <-- Avisa que se borró
+      emit(state.copyWith(status: Status.success, isDeleted: true)); 
     } catch (e) {
       emit(state.copyWith(status: Status.error, errorMessage: e.toString()));
     }

@@ -10,12 +10,12 @@ class TitleChanged extends CreateOpportunityEvent {
   final String title;
   const TitleChanged(this.title);
 }
-// VVV CORREGIDO VVV
+
 class SummaryChanged extends CreateOpportunityEvent {
   final String summary;
   const SummaryChanged(this.summary);
 }
-// ^^^ CORREGIDO ^^^
+
 class DescriptionChanged extends CreateOpportunityEvent {
   final String description;
   const DescriptionChanged(this.description);

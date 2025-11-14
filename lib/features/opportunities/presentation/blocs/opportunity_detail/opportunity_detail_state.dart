@@ -4,29 +4,29 @@ class OpportunityDetailState extends Equatable {
   final Status status;
   final Opportunity? opportunity;
   final String? errorMessage;
-  final bool isDeleted; // <-- AÑADIDO
+  final bool isDeleted; 
 
   const OpportunityDetailState({
     this.status = Status.initial,
     this.opportunity,
     this.errorMessage,
-    this.isDeleted = false, // <-- AÑADIDO
+    this.isDeleted = false, 
   });
 
   OpportunityDetailState copyWith({
     Status? status,
     Opportunity? opportunity,
     String? errorMessage,
-    bool? isDeleted, // <-- AÑADIDO
+    bool? isDeleted, 
   }) {
     return OpportunityDetailState(
       status: status ?? this.status,
       opportunity: opportunity ?? this.opportunity,
       errorMessage: errorMessage ?? this.errorMessage,
-      isDeleted: isDeleted ?? this.isDeleted, // <-- AÑADIDO
+      isDeleted: isDeleted ?? this.isDeleted, 
     );
   }
 
   @override
-  List<Object?> get props => [status, opportunity, errorMessage, isDeleted]; // <-- AÑADIDO
+  List<Object?> get props => [status, opportunity, errorMessage, isDeleted]; 
 }

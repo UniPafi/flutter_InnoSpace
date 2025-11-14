@@ -10,20 +10,19 @@ dependencies:
   flutter:
     sdk: flutter
   
-  # State Management (Como en easy_travel)
+  
   flutter_bloc: ^8.1.3
   
-  # Dependency Injection (Como en easy_travel)
+ 
   provider: ^6.0.5 
 
-  # Networking (Como en easy_travel)
-  http: ^1.1.0 # Usamos http, no dio/retrofit
   
-  # Local Storage (Como en easy_travel)
+  http: ^1.1.0 
+  
+ 
   shared_preferences: ^2.2.2
 
-  # Utilities
-  equatable: ^2.0.5 # Esencial para BLoC
+  equatable: ^2.0.5 
 
 dev_dependencies:
   flutter_test:

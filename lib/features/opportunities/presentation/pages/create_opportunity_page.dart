@@ -22,7 +22,6 @@ class CreateOpportunityPage extends StatelessWidget {
         body: BlocConsumer<CreateOpportunityBloc, CreateOpportunityState>(
           listener: (context, state) {
             if (state.status == Status.success) {
-              // Muestra diálogo y regresa
               showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
@@ -31,8 +30,8 @@ class CreateOpportunityPage extends StatelessWidget {
                   actions: [
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop(); // Cierra diálogo
-                        Navigator.of(context).pop(true); // Regresa (pasando true para recargar)
+                        Navigator.of(context).pop(); 
+                        Navigator.of(context).pop(true); 
                       },
                       child: const Text('OK'),
                     ),

@@ -11,7 +11,6 @@ class OpportunityService {
 
   final String _baseUrl = ApiConstants.baseUrl;
 
-  // GET /api/v1/opportunities/company/{companyId}
   Future<List<OpportunityDto>> getOpportunities(String token, int managerId) async {
     final uri = Uri.parse("$_baseUrl${ApiConstants.opportunitiesByCompany}/$managerId");
     
@@ -31,7 +30,7 @@ class OpportunityService {
     }
   }
 
-  // GET /api/v1/opportunities/{id}
+  
   Future<OpportunityDto> getOpportunityById(String token, int opportunityId) async {
     final uri = Uri.parse("$_baseUrl${ApiConstants.opportunities}/$opportunityId");
     
@@ -50,7 +49,7 @@ class OpportunityService {
     }
   }
 
-  // POST /api/v1/opportunities
+  
   Future<OpportunityDto> createOpportunity(String token, CreateOpportunityDto dto) async {
     final uri = Uri.parse("$_baseUrl${ApiConstants.opportunities}");
     
@@ -70,7 +69,6 @@ class OpportunityService {
     }
   }
 
-  // POST /api/v1/opportunities/{id}/publish
   Future<OpportunityDto> publishOpportunity(String token, int opportunityId) async {
     final uri = Uri.parse("$_baseUrl${ApiConstants.opportunities}/$opportunityId${ApiConstants.publishOpportunity}");
     
@@ -89,7 +87,6 @@ class OpportunityService {
     }
   }
 
-  // POST /api/v1/opportunities/{id}/close
   Future<OpportunityDto> closeOpportunity(String token, int opportunityId) async {
     final uri = Uri.parse("$_baseUrl${ApiConstants.opportunities}/$opportunityId${ApiConstants.closeOpportunity}");
     
@@ -108,10 +105,7 @@ class OpportunityService {
     }
   }
 
-  // ---
-  // ¡CORRECCIÓN AQUÍ!
-  // ---
-  // DELETE /api/v1/opportunities/{id}
+
   Future<void> deleteOpportunity(String token, int opportunityId) async {
     final uri = Uri.parse("$_baseUrl${ApiConstants.opportunities}/$opportunityId");
     
@@ -123,11 +117,10 @@ class OpportunityService {
       },
     );
 
-    // Aceptamos 200 (OK) y 204 (No Content) como éxito.
     if (response.statusCode == 200 || response.statusCode == 204) {
-      return; // Éxito
+      return; 
     } else {
-      // Mostramos un error más detallado si falla
+    
       throw Exception('Error al eliminar convocatoria (Código: ${response.statusCode}): ${response.body}');
     }
   }

@@ -19,7 +19,7 @@ class LoginPage extends StatelessWidget {
               ..showSnackBar(SnackBar(content: Text(state.errorMessage ?? 'Error de Login')));
           }
           if (state.status == Status.success) {
-            // Navegamos a la página principal que contiene la BottomNav
+        
             Navigator.of(context).pushReplacementNamed('/main');
           }
         },

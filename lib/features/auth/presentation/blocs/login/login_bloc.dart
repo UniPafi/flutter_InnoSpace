@@ -14,9 +14,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginEmailChanged>(_onEmailChanged);
     on<LoginPasswordChanged>(_onPasswordChanged);
     on<LoginSubmitted>(_onSubmitted);
-    // ---
-    // AÑADIR ESTE MANEJADOR
-    // ---
+  
     on<LoginReset>(_onReset);
   }
 
@@ -29,9 +27,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Future<void> _onSubmitted(LoginSubmitted event, Emitter<LoginState> emit) async {
-    // ---
-    // AÑADE ESTA LÍNEA PARA LIMPIAR ERRORES ANTERIORES
-    // ---
+
     emit(state.copyWith(status: Status.loading, errorMessage: null));
     try {
       final user = await _authRepository.signIn(
@@ -44,11 +40,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  // ---
-  // AÑADIR ESTA NUEVA FUNCIÓN
-  // ---
+
   void _onReset(LoginReset event, Emitter<LoginState> emit) {
-    // Emite un estado completamente nuevo y limpio
     emit(const LoginState());
   }
 }

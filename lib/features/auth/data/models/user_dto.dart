@@ -1,7 +1,7 @@
 import 'package:flutter_innospace/features/auth/domain/models/user.dart';
 
 class UserDto {
-  final int id; // userId
+  final int id; 
   final String email;
   final String token;
 
@@ -11,7 +11,6 @@ class UserDto {
     required this.token,
   });
 
-  // Fábrica manual
   factory UserDto.fromJson(Map<String, dynamic> json) {
     return UserDto(
       id: json['id'] as int,
@@ -20,8 +19,7 @@ class UserDto {
     );
   }
 
-  // Método para convertir a modelo de Dominio
-  // (Le pasamos el managerId que obtendremos por separado)
+
   User toDomain(int managerId) {
     return User(
       id: id,

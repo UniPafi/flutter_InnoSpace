@@ -6,8 +6,7 @@ import '../models/user_dto.dart';
 
 class AuthService {
   final http.Client _client;
-  
-  // Usamos Uri.parse para construir las URLs
+
   final Uri _signInUri = Uri.parse(ApiConstants.baseUrl + ApiConstants.signIn);
   final Uri _signUpUri = Uri.parse(ApiConstants.baseUrl + ApiConstants.signUp);
   final Uri _managerProfilesUri = Uri.parse(ApiConstants.baseUrl + ApiConstants.managerProfiles);
@@ -25,10 +24,8 @@ class AuthService {
     );
 
     if (response.statusCode == 200) {
-      // Decodificamos la respuesta y la pasamos al DTO
       return UserDto.fromJson(jsonDecode(response.body));
     } else {
-      // Aquí puedes manejar errores de API
       throw Exception('Error al iniciar sesión: ${response.body}');
     }
   }
@@ -41,14 +38,14 @@ class AuthService {
         'name': name,
         'email': email,
         'password': password,
-        'accountType': 'MANAGER' // Fijo, como pediste
+        'accountType': 'MANAGER' 
       }),
     );
 
-    if (response.statusCode != 201) { // 201 Created
+    if (response.statusCode != 201) { 
       throw Exception('Error al registrarse: ${response.body}');
     }
-    // No devolvemos nada, solo confirmamos que funcionó
+  
   }
   
   Future<List<ManagerProfileDto>> getAllManagerProfiles(String token) async {
@@ -56,14 +53,12 @@ class AuthService {
       _managerProfilesUri,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token', // Pasamos el token
+        'Authorization': 'Bearer $token', 
       },
     );
 
     if (response.statusCode == 200) {
-      // Decodificamos la lista
       final List<dynamic> jsonList = jsonDecode(response.body);
-      // Mapeamos la lista de JSON a una lista de DTOs
       return jsonList
           .map((json) => ManagerProfileDto.fromJson(json))
           .toList();

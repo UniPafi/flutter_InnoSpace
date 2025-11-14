@@ -7,8 +7,6 @@ abstract class OpportunityRepository {
   Future<Opportunity> createOpportunity(CreateOpportunityDto createDto);
   Future<Opportunity> publishOpportunity(int id);
   Future<Opportunity> closeOpportunity(int id);
-  // ---
-  // ¡NUEVO MÉTODO AÑADIDO!
-  // ---
+ 
   Future<void> deleteOpportunity(int id);
 }
