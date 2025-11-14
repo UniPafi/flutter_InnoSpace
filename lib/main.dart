@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// Importamos los archivos
 import 'core/services/session_manager.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/data/services/auth_service.dart';
@@ -8,9 +7,14 @@ import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/auth/presentation/blocs/login/login_bloc.dart';
 import 'features/auth/presentation/blocs/register/register_bloc.dart';
 import 'features/auth/presentation/pages/login_page.dart';
-import 'features/auth/presentation/pages/register_page.dart'; // Import RegisterPage
+import 'features/auth/presentation/pages/register_page.dart';
 import 'features/main/main_page.dart';
-// Dependencias
+
+// ¡NUEVOS IMPORTS!
+import 'features/opportunities/data/repositories/opportunity_repository_impl.dart';
+import 'features/opportunities/data/services/opportunity_service.dart';
+import 'features/opportunities/domain/repositories/opportunity_repository.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,9 +43,12 @@ class MyApp extends StatelessWidget {
           create: (_) => SessionManager(prefs),
         ),
         
-        // --- Servicios de API (Clase con http) ---
+        // --- Servicios de API (Clases con http) ---
         ProxyProvider<http.Client, AuthService>(
           update: (_, client, __) => AuthService(client),
+        ),
+        ProxyProvider<http.Client, OpportunityService>( // <-- AÑADIDO
+          update: (_, client, __) => OpportunityService(client),
         ),
 
         // --- Repositorios (Implementaciones) ---
@@ -49,8 +56,12 @@ class MyApp extends StatelessWidget {
           update: (_, authService, sessionManager, __) =>
               AuthRepositoryImpl(authService, sessionManager),
         ),
+        ProxyProvider2<OpportunityService, SessionManager, OpportunityRepository>( // <-- AÑADIDO
+          update: (_, oppService, sessionManager, __) =>
+              OpportunityRepositoryImpl(oppService, sessionManager),
+        ),
 
-        // --- BLoCs ---
+        // --- BLoCs (Solo BLoCs de páginas, los de feature se proveen en la ruta) ---
         BlocProvider<LoginBloc>(
           create: (context) => LoginBloc(context.read<AuthRepository>()),
         ),
@@ -69,16 +80,17 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) {
-              final sessionManager = context.read<SessionManager>();
-              if (sessionManager.isLoggedIn()) { // Esto ahora será 'false'
-                  return const MainPage();
-              }
-              return const LoginPage(); // <-- Y te enviará aquí
+            final sessionManager = context.read<SessionManager>();
+            if (sessionManager.isLoggedIn()) {
+              return const MainPage();
+            }
+            return const LoginPage();
           },
-          // Corrección: Eliminamos 'const' de las rutas
           '/login': (context) => const LoginPage(),
           '/register': (context) => const RegisterPage(),
           '/main': (context) => const MainPage(),
+          // NOTA: Las rutas de detalle y crear las manejamos con MaterialPageRoute
+          // para poder pasar argumentos (como el ID) fácilmente.
         },
       ),
     );
