@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_innospace/core/enums/status.dart';
 import 'package:flutter_innospace/features/opportunities/domain/models/opportunity.dart';
-import 'package:flutter_innospace/features/opportunities/domain/repositories/opportunity_repository.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/CloseOpportunityUseCase.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/DeleteOpportunityUseCase.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/GetOpportunityByIdUseCase.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/PublishOpportunityUseCase.dart';
 import '../blocs/opportunity_detail/opportunity_detail_bloc.dart';
 
 class OpportunityDetailPage extends StatelessWidget {
@@ -12,10 +15,14 @@ class OpportunityDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => OpportunityDetailBloc(context.read<OpportunityRepository>())
-        ..add(FetchOpportunityDetail(opportunityId)),
-      child: Scaffold(
+    return BlocProvider<OpportunityDetailBloc>(
+      create: (context) => OpportunityDetailBloc(
+    context.read<GetOpportunityByIdUseCase>(),
+    context.read<PublishOpportunityUseCase>(),
+    context.read<CloseOpportunityUseCase>(),
+    context.read<DeleteOpportunityUseCase>(),
+  )..add(FetchOpportunityDetail(opportunityId)), 
+  child: Scaffold(
         appBar: AppBar(
           title: const Text('Detalle Convocatoria'),
         ),

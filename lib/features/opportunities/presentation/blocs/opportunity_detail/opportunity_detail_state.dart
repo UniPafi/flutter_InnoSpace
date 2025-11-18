@@ -4,7 +4,7 @@ class OpportunityDetailState extends Equatable {
   final Status status;
   final Opportunity? opportunity;
   final String? errorMessage;
-  final bool isDeleted; // <-- AÑADIDO
+  final bool isDeleted;
 
   const OpportunityDetailState({
     this.status = Status.initial,
