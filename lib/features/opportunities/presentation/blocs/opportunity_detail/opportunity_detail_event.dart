@@ -15,7 +15,5 @@ class PublishOpportunity extends OpportunityDetailEvent {}
 
 class CloseOpportunity extends OpportunityDetailEvent {}
 
-// ---
-// ¡NUEVO EVENTO AÑADIDO!
-// ---
+
 class DeleteOpportunity extends OpportunityDetailEvent {}

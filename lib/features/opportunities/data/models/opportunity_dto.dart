@@ -1,13 +1,12 @@
 import 'package:flutter_innospace/core/enums/status.dart';
 import 'package:flutter_innospace/features/opportunities/domain/models/opportunity.dart';
 
-// Representa el "OpportunityResource" del backend
 class OpportunityDto {
   final int id;
   final int companyId;
   final String title;
   final String description;
-  final String summary; // <-- CORRECCIÓN: Ahora coincide con el dominio (2 'm')
+  final String summary; 
   final String category;
   final List<String> requirements;
   final String status;
@@ -17,45 +16,40 @@ class OpportunityDto {
     required this.companyId,
     required this.title,
     required this.description,
-    required this.summary, // <-- CORRECCIÓN
+    required this.summary, 
     required this.category,
     required this.requirements,
     required this.status,
   });
 
   factory OpportunityDto.fromJson(Map<String, dynamic> json) {
+final rawId = json['id']?.toString();
+
     return OpportunityDto(
-      id: int.tryParse(json['id'].toString()) ?? 0,
-      
-      companyId: (json['companyId'] ?? json['company']) as int? ?? 0,
+      id: rawId != null ? (int.tryParse(rawId) ?? 0) : 0,      
+      companyId: json['companyId'] as int? ?? json['company'] as int? ?? 0,
+    
+    title: json['title'] as String? ?? '',
+    description: json['description'] as String? ?? '',
+    summary: json['summary'] as String? ?? json['sumary'] as String? ?? '',
+    
+    category: json['category'] as String? ?? '',
+    status: json['status'] as String? ?? 'DRAFT',
 
-      title: json['title'] as String? ?? '',
-      description: json['description'] as String? ?? '',
-
-      // ---
-      // ¡LÓGICA MEJORADA!
-      // El campo del DTO 'summary' (2 'm') se llena buscando
-      // 'summary' (2 'm') O 'sumary' (1 'm') en el JSON.
-      // ---
-      summary: (json['summary'] ?? json['sumary']) as String? ?? '',
-
-      category: json['category'] as String? ?? '',
-      status: json['status'] as String? ?? 'DRAFT',
-
-      requirements: json['requirements'] == null
-          ? <String>[]
-          : List<String>.from(json['requirements'].map((x) => x as String)),
+    requirements: List<String>.from(
+        (json['requirements'] as List? ?? [])
+            .map((x) => x.toString())
+            ),
     );
   }
 
-  // Convierte el DTO (Datos) al Modelo (Dominio)
   Opportunity toDomain() {
     return Opportunity(
       id: id,
       companyId: companyId,
       title: title,
       description: description,
-      summary: summary, // <-- CORRECCIÓN: Ahora es 'summary' -> 'summary'
+      summary: summary, 
       category: category,
       requirements: requirements,
       status: OpportunityStatus.fromString(status),

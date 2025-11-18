@@ -14,7 +14,10 @@ android/local.properties
 android/**/*.iml
 android/captures/
 android/.idea/
-
+.android/
+.gradle/
+**/build/
+**/.gradle/
 # iOS
 ios/Pods/
 ios/Flutter/Flutter.podspec

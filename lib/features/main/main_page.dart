@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/GetMyOpportunitiesUseCase.dart';
 import '../auth/domain/repositories/auth_repository.dart'; 
-import 'package:flutter_innospace/features/opportunities/domain/repositories/opportunity_repository.dart';
 import 'package:flutter_innospace/features/opportunities/presentation/blocs/opportunity_list/opportunity_list_bloc.dart';
 import 'package:flutter_innospace/features/opportunities/presentation/pages/opportunities_page.dart';
-// ---
-// AÑADIR EL IMPORT DEL LOGIN BLOC
-// ---
+
 import 'package:flutter_innospace/features/auth/presentation/blocs/login/login_bloc.dart';
 
 
-// ---
-// Placeholders (Explore, Requests)
-// ---
 class ExplorePage extends StatelessWidget { 
   const ExplorePage({super.key}); 
   @override 
@@ -31,14 +25,7 @@ class RequestsPage extends StatelessWidget {
         body: const Center(child: Text('Solicitudes (Próximamente)')),
       ); 
 }
-// ---
-// FIN DE PLACEHOLDERS
-// ---
 
-
-// ---
-// Página de Perfil
-// ---
 class ProfilePage extends StatelessWidget { 
   const ProfilePage({super.key}); 
   
@@ -57,17 +44,13 @@ class ProfilePage extends StatelessWidget {
           ),
           child: const Text('Cerrar Sesión'),
           onPressed: () async {
-            // ---
-            // ¡CORRECCIÓN! Obtenemos el LoginBloc
-            // ---
+        
             final authRepo = context.read<AuthRepository>();
             final loginBloc = context.read<LoginBloc>();
             
             await authRepo.signOut();
             
-            // ---
-            // ¡CORRECIÓN! Disparamos el evento de reseteo
-            // ---
+            
             loginBloc.add(LoginReset());
 
             if (context.mounted) {
@@ -79,9 +62,6 @@ class ProfilePage extends StatelessWidget {
     );
   }
 }
-// ---
-// Fin de la página de perfil
-// ---
 
 
 class MainPage extends StatefulWidget {
@@ -94,11 +74,11 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
 
-  // Las 4 pantallas (Sin cambios)
+
   static final List<Widget> _widgetOptions = <Widget>[
     const ExplorePage(),
     BlocProvider<OpportunityListBloc>(
-      create: (context) => OpportunityListBloc(context.read<OpportunityRepository>()),
+      create: (context) => OpportunityListBloc(context.read<GetMyOpportunitiesUseCase>()),
       child: const OpportunitiesPage(),
     ),
     const RequestsPage(),
@@ -125,7 +105,7 @@ class _MainPageState extends State<MainPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business_center),
-            label: 'Convocatorias',
+            label: 'Mis Convocatorias',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.inbox),

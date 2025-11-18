@@ -11,7 +11,6 @@ class OpportunityService {
 
   final String _baseUrl = ApiConstants.baseUrl;
 
-  // GET /api/v1/opportunities/company/{companyId}
   Future<List<OpportunityDto>> getOpportunities(String token, int managerId) async {
     final uri = Uri.parse("$_baseUrl${ApiConstants.opportunitiesByCompany}/$managerId");
     
@@ -108,10 +107,7 @@ class OpportunityService {
     }
   }
 
-  // ---
-  // ¡CORRECCIÓN AQUÍ!
-  // ---
-  // DELETE /api/v1/opportunities/{id}
+ 
   Future<void> deleteOpportunity(String token, int opportunityId) async {
     final uri = Uri.parse("$_baseUrl${ApiConstants.opportunities}/$opportunityId");
     
@@ -127,7 +123,6 @@ class OpportunityService {
     if (response.statusCode == 200 || response.statusCode == 204) {
       return; // Éxito
     } else {
-      // Mostramos un error más detallado si falla
       throw Exception('Error al eliminar convocatoria (Código: ${response.statusCode}): ${response.body}');
     }
   }

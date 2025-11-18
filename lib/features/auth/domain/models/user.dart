@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
 class User extends Equatable {
-  final int id; // userId
+  final int id; 
   final String email;
   final String token;
-  final int managerId; // El ID del perfil de manager
+  final int managerId; 
 
   const User({
     required this.id,
