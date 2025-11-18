@@ -11,7 +11,6 @@ class OpportunityService {
 
   final String _baseUrl = ApiConstants.baseUrl;
 
-  // GET /api/v1/opportunities/company/{companyId}
   Future<List<OpportunityDto>> getOpportunities(String token, int managerId) async {
     final uri = Uri.parse("$_baseUrl${ApiConstants.opportunitiesByCompany}/$managerId");
     

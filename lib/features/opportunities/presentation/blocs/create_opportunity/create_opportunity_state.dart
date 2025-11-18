@@ -31,7 +31,7 @@ class CreateOpportunityState extends Equatable {
     return CreateOpportunityState(
       status: status ?? this.status,
       title: title ?? this.title,
-      summary: summary ?? this.summary, // <-- CORREGIDO A 2 'm'
+      summary: summary ?? this.summary, 
       description: description ?? this.description,
       category: category ?? this.category,
       requirements: requirements ?? this.requirements,

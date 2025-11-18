@@ -10,20 +10,20 @@ class OpportunityDetailState extends Equatable {
     this.status = Status.initial,
     this.opportunity,
     this.errorMessage,
-    this.isDeleted = false, // <-- AÑADIDO
+    this.isDeleted = false, 
   });
 
   OpportunityDetailState copyWith({
     Status? status,
     Opportunity? opportunity,
     String? errorMessage,
-    bool? isDeleted, // <-- AÑADIDO
+    bool? isDeleted, 
   }) {
     return OpportunityDetailState(
       status: status ?? this.status,
       opportunity: opportunity ?? this.opportunity,
       errorMessage: errorMessage ?? this.errorMessage,
-      isDeleted: isDeleted ?? this.isDeleted, // <-- AÑADIDO
+      isDeleted: isDeleted ?? this.isDeleted,
     );
   }
 

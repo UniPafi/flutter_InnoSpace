@@ -1,30 +1,45 @@
 class ManagerProfileDto {
-  final int id; // managerId
+  final int id; 
   final int userId;
   final String name;
-  // Añade más campos si los necesitas
-  // final String? photoUrl;
-  // final String? description;
+final String? photoUrl;
+  final String? description;
+  final String? phoneNumber;
+  final String? companyName;
+  final String? focusArea;
+  final String? location;
+  final List<String> companyTechnologies;
 
   const ManagerProfileDto({
     required this.id,
     required this.userId,
     required this.name,
-    // this.photoUrl,
-    // this.description,
+   this.photoUrl,
+    this.description,
+    this.phoneNumber,
+    this.companyName,
+    this.focusArea,
+    this.location,
+    this.companyTechnologies = const [],
   });
 
-  // Fábrica manual
   factory ManagerProfileDto.fromJson(Map<String, dynamic> json) {
     return ManagerProfileDto(
       id: json['id'] as int,
       userId: json['userId'] as int,
       name: json['name'] as String,
-      // photoUrl: json['photoUrl'],
-      // description: json['description'],
+       photoUrl: json['photoUrl'],
+      description: json['description'],
+      phoneNumber: json['phoneNumber'],
+      companyName: json['companyName'],
+      focusArea: json['focusArea'],
+      location: json['location'],
+      companyTechnologies: (json['companyTechnologies'] as List?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
     );
   }
   
-  // Este DTO no necesita un .toDomain() porque solo
-  // lo usamos para extraer el 'id' y el 'userId'.
+  
 }

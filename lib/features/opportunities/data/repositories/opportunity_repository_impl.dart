@@ -10,7 +10,6 @@ class OpportunityRepositoryImpl implements OpportunityRepository {
 
   OpportunityRepositoryImpl(this._service, this._sessionManager);
 
-  // Helper para obtener token y managerId
   String _getToken() => _sessionManager.getAuthToken() ?? '';
   int _getManagerId() => _sessionManager.getManagerId() ?? 0;
 
@@ -47,9 +46,6 @@ class OpportunityRepositoryImpl implements OpportunityRepository {
     return dto.toDomain();
   }
 
-  // ---
-  // ¡NUEVA IMPLEMENTACIÓN AÑADIDA!
-  // ---
   @override
   Future<void> deleteOpportunity(int id) async {
     await _service.deleteOpportunity(_getToken(), id);

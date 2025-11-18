@@ -6,7 +6,7 @@ class Opportunity extends Equatable {
   final int companyId;
   final String title;
   final String description;
-  final String summary; // <-- DEBE TENER 2 'm'
+  final String summary;
   final String category;
   final List<String> requirements;
   final OpportunityStatus status;
@@ -16,7 +16,7 @@ class Opportunity extends Equatable {
     required this.companyId,
     required this.title,
     required this.description,
-    required this.summary, // <-- DEBE TENER 2 'm'
+    required this.summary, 
     required this.category,
     required this.requirements,
     required this.status,
