@@ -18,7 +18,7 @@ class RegisterPage extends StatelessWidget {
               ..showSnackBar(SnackBar(content: Text(state.errorMessage ?? 'Error de Registro')));
           }
           if (state.status == Status.success) {
-            // Éxito, mostramos diálogo y volvemos a Login
+       
             showDialog(
               context: context,
               builder: (_) => AlertDialog(
@@ -27,8 +27,8 @@ class RegisterPage extends StatelessWidget {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop(); // Cierra diálogo
-                      Navigator.of(context).pop(); // Vuelve a Login Page
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(); 
                     },
                     child: const Text('OK'),
                   ),
