@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_innospace/core/ui/theme.dart';
 import 'package:flutter_innospace/features/auth/domain/usecases/SignInUseCase.dart';
 import 'package:flutter_innospace/features/auth/domain/usecases/SignUpUseCase.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/CloseOpportunityUseCase.dart';
@@ -130,11 +131,10 @@ BlocProvider<OpportunityDetailBloc>(
         ),
       ],
       child: MaterialApp(
-        title: 'flutter_InnoSpaces',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+        title: 'flutter_InnoSpace',
+      theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system,
         
         initialRoute: '/',
         routes: {
