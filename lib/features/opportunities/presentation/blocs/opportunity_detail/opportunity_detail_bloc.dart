@@ -2,8 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_innospace/core/enums/status.dart';
 import 'package:flutter_innospace/features/opportunities/domain/models/opportunity.dart';
-import 'package:flutter_innospace/features/opportunities/domain/use-cases/CloseOpportunityUseCase.dart';
-import 'package:flutter_innospace/features/opportunities/domain/use-cases/DeleteOpportunityUseCase.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/close_opportunity_use_case.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/delete_opportunity_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/GetOpportunityByIdUseCase.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/PublishOpportunityUseCase.dart';
 

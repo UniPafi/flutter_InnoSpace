@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_innospace/core/enums/status.dart';
-import 'package:flutter_innospace/features/opportunities/domain/use-cases/CreateOpportunityUseCase.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/create_opportunity_use_case.dart';
 import '../blocs/create_opportunity/create_opportunity_bloc.dart';
 
 class CreateOpportunityPage extends StatelessWidget {

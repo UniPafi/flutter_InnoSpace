@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_innospace/core/enums/status.dart';
 
-import 'package:flutter_innospace/features/opportunities/domain/use-cases/CreateOpportunityUseCase.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/create_opportunity_use_case.dart';
 
 part 'create_opportunity_event.dart';
 part 'create_opportunity_state.dart';
