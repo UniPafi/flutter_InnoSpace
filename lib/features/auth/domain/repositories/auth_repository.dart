@@ -1,5 +1,4 @@
 import '../models/user.dart';
-
 abstract class AuthRepository {
   Future<User> signIn({required String email, required String password});
   
@@ -10,4 +9,6 @@ abstract class AuthRepository {
   });
 
   Future<void> signOut();
+
+   
 }

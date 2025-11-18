@@ -5,6 +5,7 @@ import 'package:flutter_innospace/features/auth/domain/repositories/auth_reposit
 import '../models/manager_profile_dto.dart';
 import '../models/user_dto.dart';
 
+
 class AuthRepositoryImpl implements AuthRepository {
   final AuthService _authService;
   final SessionManager _sessionManager;
@@ -13,31 +14,24 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<User> signIn({required String email, required String password}) async {
-    try {
-      final UserDto userDto = await _authService.signIn(email, password);
 
-     
-      final List<ManagerProfileDto> allProfiles = 
-          await _authService.getAllManagerProfiles(userDto.token);
+    
+    final UserDto userDto = await _authService.signIn(email, password);
 
-      final ManagerProfileDto myProfile = allProfiles.firstWhere(
-        (profile) => profile.userId == userDto.id,
-        orElse: () => throw Exception("No se encontró el perfil de manager para este usuario."),
-      );
+    final List<ManagerProfileDto> allProfiles = await _authService.getAllManagerProfiles(userDto.token);
 
+    final ManagerProfileDto myProfile = allProfiles.firstWhere(
+      (profile) => profile.userId == userDto.id,
+      orElse: () => throw Exception("No se encontró el perfil de manager para este usuario."),
+    );
 
-      await _sessionManager.saveSession(
-        token: userDto.token,
-        userId: userDto.id,
-        managerId: myProfile.id, 
-      );
+    await _sessionManager.saveSession(
+      token: userDto.token,
+      userId: userDto.id,
+      managerId: myProfile.id,
+    );
 
-
-      return userDto.toDomain(myProfile.id);
-      
-    } catch (e) {
-      throw Exception("Error en el repositorio: ${e.toString()}");
-    }
+    return userDto.toDomain(myProfile.id);
   }
 
   @override
@@ -46,11 +40,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required String email,
     required String password,
   }) async {
-    try {
-      await _authService.signUp(name, email, password);
-    } catch (e) {
-      throw Exception("Error en el repositorio: ${e.toString()}");
-    }
+    await _authService.signUp(name, email, password);
   }
 
   @override

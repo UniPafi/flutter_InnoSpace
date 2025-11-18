@@ -37,7 +37,6 @@ class _OpportunitiesPageState extends State<OpportunitiesPage> {
       ),
     );
     
-    // Al regresar del detalle, recargamos por si hubo cambios
     if (mounted) {
        context.read<OpportunityListBloc>().add(FetchOpportunities());
     }

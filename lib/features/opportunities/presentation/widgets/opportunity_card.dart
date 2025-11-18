@@ -57,7 +57,6 @@ class OpportunityCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
 
-           
               Chip(
                 label: Text(
                   opportunity.category.isNotEmpty 
@@ -73,6 +72,7 @@ class OpportunityCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
+             
               Text(
                 opportunity.summary.isNotEmpty
                   ? opportunity.summary

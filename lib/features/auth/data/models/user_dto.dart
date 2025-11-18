@@ -11,6 +11,7 @@ class UserDto {
     required this.token,
   });
 
+  
   factory UserDto.fromJson(Map<String, dynamic> json) {
     return UserDto(
       id: json['id'] as int,
@@ -19,13 +20,12 @@ class UserDto {
     );
   }
 
-
-  User toDomain(int managerId) {
-    return User(
-      id: id,
-      email: email,
-      token: token,
-      managerId: managerId,
-    );
-  }
+User toDomain(int managerId) {
+  return User(
+    id: id,
+    email: email,
+    token: token,
+    managerId: managerId, // Aceptable porque el Repositorio sabe quién es el Manager
+  );
+}
 }

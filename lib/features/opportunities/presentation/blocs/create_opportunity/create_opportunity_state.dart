@@ -22,7 +22,7 @@ class CreateOpportunityState extends Equatable {
   CreateOpportunityState copyWith({
     Status? status,
     String? title,
-    String? summary, 
+    String? summary,
     String? description,
     String? category,
     String? requirements,

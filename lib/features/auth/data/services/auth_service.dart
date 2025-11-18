@@ -6,7 +6,8 @@ import '../models/user_dto.dart';
 
 class AuthService {
   final http.Client _client;
-
+  
+  
   final Uri _signInUri = Uri.parse(ApiConstants.baseUrl + ApiConstants.signIn);
   final Uri _signUpUri = Uri.parse(ApiConstants.baseUrl + ApiConstants.signUp);
   final Uri _managerProfilesUri = Uri.parse(ApiConstants.baseUrl + ApiConstants.managerProfiles);
@@ -24,8 +25,10 @@ class AuthService {
     );
 
     if (response.statusCode == 200) {
+     
       return UserDto.fromJson(jsonDecode(response.body));
     } else {
+      
       throw Exception('Error al iniciar sesión: ${response.body}');
     }
   }
@@ -45,7 +48,7 @@ class AuthService {
     if (response.statusCode != 201) { 
       throw Exception('Error al registrarse: ${response.body}');
     }
-  
+    
   }
   
   Future<List<ManagerProfileDto>> getAllManagerProfiles(String token) async {
@@ -59,6 +62,7 @@ class AuthService {
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = jsonDecode(response.body);
+     
       return jsonList
           .map((json) => ManagerProfileDto.fromJson(json))
           .toList();

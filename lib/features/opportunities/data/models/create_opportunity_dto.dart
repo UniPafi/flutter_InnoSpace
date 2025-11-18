@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 class CreateOpportunityDto {
   final int companyId;
   final String title;
@@ -13,12 +12,11 @@ class CreateOpportunityDto {
     required this.companyId,
     required this.title,
     required this.description,
-    required this.summary, 
+    required this.summary,
     required this.category,
     required this.requirements,
   });
 
-  
   Map<String, dynamic> toJson() {
     return {
       'companyId': companyId,

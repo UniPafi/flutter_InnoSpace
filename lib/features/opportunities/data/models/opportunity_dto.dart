@@ -1,7 +1,6 @@
 import 'package:flutter_innospace/core/enums/status.dart';
 import 'package:flutter_innospace/features/opportunities/domain/models/opportunity.dart';
 
-
 class OpportunityDto {
   final int id;
   final int companyId;
@@ -24,27 +23,26 @@ class OpportunityDto {
   });
 
   factory OpportunityDto.fromJson(Map<String, dynamic> json) {
+final rawId = json['id']?.toString();
+
     return OpportunityDto(
-      id: int.tryParse(json['id'].toString()) ?? 0,
-      
-      companyId: (json['companyId'] ?? json['company']) as int? ?? 0,
+      id: rawId != null ? (int.tryParse(rawId) ?? 0) : 0,      
+      companyId: json['companyId'] as int? ?? json['company'] as int? ?? 0,
+    
+    title: json['title'] as String? ?? '',
+    description: json['description'] as String? ?? '',
+    summary: json['summary'] as String? ?? json['sumary'] as String? ?? '',
+    
+    category: json['category'] as String? ?? '',
+    status: json['status'] as String? ?? 'DRAFT',
 
-      title: json['title'] as String? ?? '',
-      description: json['description'] as String? ?? '',
-
-   
-      summary: (json['summary'] ?? json['sumary']) as String? ?? '',
-
-      category: json['category'] as String? ?? '',
-      status: json['status'] as String? ?? 'DRAFT',
-
-      requirements: json['requirements'] == null
-          ? <String>[]
-          : List<String>.from(json['requirements'].map((x) => x as String)),
+    requirements: List<String>.from(
+        (json['requirements'] as List? ?? [])
+            .map((x) => x.toString())
+            ),
     );
   }
 
- 
   Opportunity toDomain() {
     return Opportunity(
       id: id,

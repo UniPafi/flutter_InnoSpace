@@ -105,7 +105,7 @@ class OpportunityService {
     }
   }
 
-
+ 
   Future<void> deleteOpportunity(String token, int opportunityId) async {
     final uri = Uri.parse("$_baseUrl${ApiConstants.opportunities}/$opportunityId");
     
@@ -120,7 +120,6 @@ class OpportunityService {
     if (response.statusCode == 200 || response.statusCode == 204) {
       return; 
     } else {
-    
       throw Exception('Error al eliminar convocatoria (Código: ${response.statusCode}): ${response.body}');
     }
   }

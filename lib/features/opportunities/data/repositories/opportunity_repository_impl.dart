@@ -46,7 +46,6 @@ class OpportunityRepositoryImpl implements OpportunityRepository {
     return dto.toDomain();
   }
 
-
   @override
   Future<void> deleteOpportunity(int id) async {
     await _service.deleteOpportunity(_getToken(), id);

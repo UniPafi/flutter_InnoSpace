@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_innospace/core/enums/status.dart';
-import 'package:flutter_innospace/core/services/session_manager.dart';
-import 'package:flutter_innospace/features/opportunities/domain/repositories/opportunity_repository.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/CreateOpportunityUseCase.dart';
 import '../blocs/create_opportunity/create_opportunity_bloc.dart';
 
 class CreateOpportunityPage extends StatelessWidget {
@@ -10,10 +9,9 @@ class CreateOpportunityPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<CreateOpportunityBloc>(
       create: (context) => CreateOpportunityBloc(
-        context.read<OpportunityRepository>(),
-        context.read<SessionManager>(),
+        context.read<CreateOpportunityUseCase>(),
       ),
       child: Scaffold(
         appBar: AppBar(
@@ -59,8 +57,8 @@ class CreateOpportunityPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   TextField(
-                    decoration: const InputDecoration(labelText: 'Resumen (Summary)'), // <-- CORREGIDO LABEL
-                    onChanged: (value) => context.read<CreateOpportunityBloc>().add(SummaryChanged(value)), // <-- CORREGIDO EVENTO
+                    decoration: const InputDecoration(labelText: 'Resumen (Summary)'), 
+                    onChanged: (value) => context.read<CreateOpportunityBloc>().add(SummaryChanged(value)), 
                   ),
                   const SizedBox(height: 16),
                   TextField(

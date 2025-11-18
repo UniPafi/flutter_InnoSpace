@@ -10,7 +10,6 @@ class TitleChanged extends CreateOpportunityEvent {
   final String title;
   const TitleChanged(this.title);
 }
-
 class SummaryChanged extends CreateOpportunityEvent {
   final String summary;
   const SummaryChanged(this.summary);
