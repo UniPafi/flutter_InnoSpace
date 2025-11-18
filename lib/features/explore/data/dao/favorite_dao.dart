@@ -32,4 +32,14 @@ class FavoriteDao {
     );
     return maps.isNotEmpty;
   }
+
+Future<List<int>> fetchAllIds() async {
+  final Database db = await AppDatabase().database;
+  final List<Map<String, dynamic>> maps = await db.query(
+    DatabaseConstants.favoriteProjectsTable,
+    columns: ['id'],
+  );
+  return maps.map((map) => map['id'] as int).toList();
+}
+
 }

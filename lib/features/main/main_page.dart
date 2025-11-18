@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_innospace/features/opportunities/domain/use-cases/GetMyOpportunitiesUseCase.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/get_my_opportunities_use_case.dart';
 import '../auth/domain/repositories/auth_repository.dart'; 
 import 'package:flutter_innospace/features/opportunities/presentation/blocs/opportunity_list/opportunity_list_bloc.dart';
 import 'package:flutter_innospace/features/opportunities/presentation/pages/opportunities_page.dart';

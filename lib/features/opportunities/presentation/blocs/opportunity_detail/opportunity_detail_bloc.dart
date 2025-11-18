@@ -4,8 +4,8 @@ import 'package:flutter_innospace/core/enums/status.dart';
 import 'package:flutter_innospace/features/opportunities/domain/models/opportunity.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/close_opportunity_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/delete_opportunity_use_case.dart';
-import 'package:flutter_innospace/features/opportunities/domain/use-cases/GetOpportunityByIdUseCase.dart';
-import 'package:flutter_innospace/features/opportunities/domain/use-cases/PublishOpportunityUseCase.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/get_opportunity_by_id_use_case.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/publish_opportunity_use_case.dart';
 
 part 'opportunity_detail_event.dart';
 part 'opportunity_detail_state.dart';

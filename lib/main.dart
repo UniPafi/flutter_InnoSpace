@@ -6,8 +6,8 @@ import 'package:flutter_innospace/features/auth/domain/usecases/SignUpUseCase.da
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/close_opportunity_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/create_opportunity_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/delete_opportunity_use_case.dart';
-import 'package:flutter_innospace/features/opportunities/domain/use-cases/GetOpportunityByIdUseCase.dart';
-import 'package:flutter_innospace/features/opportunities/domain/use-cases/PublishOpportunityUseCase.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/get_opportunity_by_id_use_case.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/publish_opportunity_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/get_my_opportunities_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/presentation/blocs/opportunity_detail/opportunity_detail_bloc.dart';
 import 'package:flutter_innospace/features/opportunities/presentation/blocs/opportunity_list/opportunity_list_bloc.dart';
