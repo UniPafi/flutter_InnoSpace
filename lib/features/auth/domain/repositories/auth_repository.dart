@@ -1,5 +1,4 @@
 import '../models/user.dart';
-import '../models/manager_profile.dart';
 abstract class AuthRepository {
   Future<User> signIn({required String email, required String password});
   
@@ -11,5 +10,5 @@ abstract class AuthRepository {
 
   Future<void> signOut();
 
-   Future<List<ManagerProfile>> getManagerProfiles(String token);
+   
 }

@@ -35,7 +35,6 @@ class OpportunityCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // --- Fila 1: Título y Estado ---
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,9 +58,6 @@ class OpportunityCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
 
-              // ---
-              // ¡CAMPO AÑADIDO! Fila 2: Categoría
-              // ---
               Chip(
                 label: Text(
                   opportunity.category.isNotEmpty 
@@ -77,7 +73,7 @@ class OpportunityCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              // --- Fila 3: Resumen ---
+             
               Text(
                 opportunity.summary.isNotEmpty
                   ? opportunity.summary

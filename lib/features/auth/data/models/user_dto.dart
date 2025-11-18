@@ -20,12 +20,12 @@ class UserDto {
     );
   }
 
- User toDomain() {
+User toDomain(int managerId) {
   return User(
     id: id,
     email: email,
     token: token,
-    managerId: -1, 
+    managerId: managerId, // Aceptable porque el Repositorio sabe quién es el Manager
   );
 }
 }

@@ -127,9 +127,7 @@ class OpportunityDetailPage extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           
-          // ---
-          // ¡ASEGURÁNDONOS DE QUE SE USA 'opportunity.summary'!
-          // ---
+         
           Text(
             "Resumen: ${opportunity.summary}",
              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontStyle: FontStyle.italic, color: Colors.grey[700]),

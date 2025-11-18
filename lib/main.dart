@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_innospace/features/auth/domain/usecases/SignInUseCase.dart';
+import 'package:flutter_innospace/features/auth/domain/usecases/SignUpUseCase.dart';
 import 'core/services/session_manager.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/data/services/auth_service.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
+import 'features/auth/domain/usecases/SignOutUseCase.dart';
 import 'features/auth/presentation/blocs/login/login_bloc.dart';
 import 'features/auth/presentation/blocs/register/register_bloc.dart';
 import 'features/auth/presentation/pages/login_page.dart';
@@ -34,7 +37,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // --- Singletons (Servicios y Utilidades) ---
         Provider<http.Client>(
           create: (_) => http.Client(),
           dispose: (_, client) => client.close(), 
@@ -43,30 +45,39 @@ class MyApp extends StatelessWidget {
           create: (_) => SessionManager(prefs),
         ),
         
-        // --- Servicios de API (Clases con http) ---
         ProxyProvider<http.Client, AuthService>(
           update: (_, client, __) => AuthService(client),
         ),
-        ProxyProvider<http.Client, OpportunityService>( // <-- AÑADIDO
+        ProxyProvider<http.Client, OpportunityService>( 
           update: (_, client, __) => OpportunityService(client),
         ),
 
-        // --- Repositorios (Implementaciones) ---
         ProxyProvider2<AuthService, SessionManager, AuthRepository>(
           update: (_, authService, sessionManager, __) =>
               AuthRepositoryImpl(authService, sessionManager),
         ),
-        ProxyProvider2<OpportunityService, SessionManager, OpportunityRepository>( // <-- AÑADIDO
+        ProxyProvider2<OpportunityService, SessionManager, OpportunityRepository>( 
           update: (_, oppService, sessionManager, __) =>
               OpportunityRepositoryImpl(oppService, sessionManager),
         ),
+        Provider<SignInUseCase>(
+        create: (context) => SignInUseCase(context.read<AuthRepository>()),
+          ),
+        Provider<SignUpUseCase>(
+          create: (context) => SignUpUseCase(context.read<AuthRepository>()),
+          ),
+        Provider<SignOutUseCase>(
+          create: (context) => SignOutUseCase(context.read<AuthRepository>()),
+          ),
 
-        // --- BLoCs (Solo BLoCs de páginas, los de feature se proveen en la ruta) ---
+
+
+
         BlocProvider<LoginBloc>(
-          create: (context) => LoginBloc(context.read<AuthRepository>()),
+          create: (context) => LoginBloc(context.read<SignInUseCase>()),
         ),
         BlocProvider<RegisterBloc>(
-          create: (context) => RegisterBloc(context.read<AuthRepository>()),
+          create: (context) => RegisterBloc(context.read<SignUpUseCase>()),
         ),
       ],
       child: MaterialApp(
@@ -76,7 +87,6 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         
-        // --- Lógica de Rutas (Sin cambios) ---
         initialRoute: '/',
         routes: {
           '/': (context) {
@@ -89,8 +99,7 @@ class MyApp extends StatelessWidget {
           '/login': (context) => const LoginPage(),
           '/register': (context) => const RegisterPage(),
           '/main': (context) => const MainPage(),
-          // NOTA: Las rutas de detalle y crear las manejamos con MaterialPageRoute
-          // para poder pasar argumentos (como el ID) fácilmente.
+          
         },
       ),
     );

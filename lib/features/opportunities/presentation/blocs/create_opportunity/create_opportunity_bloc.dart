@@ -39,7 +39,7 @@ class CreateOpportunityBloc extends Bloc<CreateOpportunityEvent, CreateOpportuni
       companyId: managerId,
       title: state.title,
       description: state.description,
-      summary: state.summary, // <-- CORREGIDO
+      summary: state.summary, 
       category: state.category,
       requirements: requirementsList,
     );

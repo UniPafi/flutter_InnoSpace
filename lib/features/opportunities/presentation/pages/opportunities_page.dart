@@ -17,17 +17,14 @@ class _OpportunitiesPageState extends State<OpportunitiesPage> {
   @override
   void initState() {
     super.initState();
-    // Disparamos el evento para cargar las convocatorias al iniciar
     context.read<OpportunityListBloc>().add(FetchOpportunities());
   }
 
   Future<void> _navigateToCreatePage() async {
-    // Esperamos a que la página de crear regrese
     final result = await Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => const CreateOpportunityPage()),
     );
     
-    // Si regresó 'true', significa que se creó algo y debemos recargar
     if (result == true && mounted) {
       context.read<OpportunityListBloc>().add(FetchOpportunities());
     }
@@ -40,7 +37,6 @@ class _OpportunitiesPageState extends State<OpportunitiesPage> {
       ),
     );
     
-    // Al regresar del detalle, recargamos por si hubo cambios
     if (mounted) {
        context.read<OpportunityListBloc>().add(FetchOpportunities());
     }
