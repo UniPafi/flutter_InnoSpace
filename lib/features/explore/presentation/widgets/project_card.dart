@@ -1,0 +1,85 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_innospace/features/explore/domain/models/project.dart';
+import 'package:flutter_innospace/features/explore/presentation/blocs/explore_projects/explore_projects_bloc.dart';
+import 'package:flutter_innospace/features/explore/presentation/blocs/explore_projects/explore_projects_event.dart';
+import 'package:provider/provider.dart';
+
+class ProjectCard extends StatelessWidget {
+  final Project project;
+
+  const ProjectCard({super.key, required this.project});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Título
+            Text(
+              project.title,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.primaryColor, // Morado
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 8),
+
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.secondary.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                project.category,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.secondary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            Text(
+              project.summary,
+              style: theme.textTheme.bodyMedium,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 16),
+
+            Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                icon: Icon(
+                  project.isFavorite ? Icons.favorite : Icons.favorite_border,
+                  // ignore: deprecated_member_use
+                  color: project.isFavorite ? Colors.redAccent : theme.colorScheme.onSurface.withOpacity(0.5),
+                  size: 28,
+                ),
+                onPressed: () {
+                  context.read<ExploreBloc>().add(ToggleFavoriteProject(project.id));
+                  
+                
+                  final currentTab = DefaultTabController.of(context)?.index ?? 0;
+                  final isFavView = currentTab == 1;
+                  context.read<ExploreBloc>().add(FetchProjects(isFavoriteView: isFavView));
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

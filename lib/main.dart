@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_innospace/core/ui/theme.dart';
 import 'package:flutter_innospace/features/auth/domain/usecases/SignInUseCase.dart';
 import 'package:flutter_innospace/features/auth/domain/usecases/SignUpUseCase.dart';
-import 'package:flutter_innospace/features/opportunities/domain/use-cases/CloseOpportunityUseCase.dart';
-import 'package:flutter_innospace/features/opportunities/domain/use-cases/CreateOpportunityUseCase.dart';
-import 'package:flutter_innospace/features/opportunities/domain/use-cases/DeleteOpportunityUseCase.dart';
-import 'package:flutter_innospace/features/opportunities/domain/use-cases/GetMyOpportunitiesUseCase.dart';
-import 'package:flutter_innospace/features/opportunities/domain/use-cases/GetOpportunityByIdUseCase.dart';
-import 'package:flutter_innospace/features/opportunities/domain/use-cases/PublishOpportunityUseCase.dart';
+import 'package:flutter_innospace/features/explore/data/dao/favorite_dao.dart';
+import 'package:flutter_innospace/features/explore/data/repositories/project_repository_impl.dart';
+import 'package:flutter_innospace/features/explore/data/services/project_service.dart';
+import 'package:flutter_innospace/features/explore/domain/repositories/project_repository.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/get_explore_projects_use_case.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/get_favorite_projects_use_case.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/toggle_favorite_project_use_case.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/close_opportunity_use_case.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/create_opportunity_use_case.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/delete_opportunity_use_case.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/get_opportunity_by_id_use_case.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/publish_opportunity_use_case.dart';
+import 'package:flutter_innospace/features/opportunities/domain/use-cases/get_my_opportunities_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/presentation/blocs/opportunity_detail/opportunity_detail_bloc.dart';
 import 'package:flutter_innospace/features/opportunities/presentation/blocs/opportunity_list/opportunity_list_bloc.dart';
 import 'core/services/session_manager.dart';
@@ -50,7 +58,11 @@ class MyApp extends StatelessWidget {
         Provider<SessionManager>(
           create: (_) => SessionManager(prefs),
         ),
-        
+        Provider<FavoriteDao>(
+  create: (_) => FavoriteDao(),
+),
+
+
         ProxyProvider<http.Client, AuthService>(
           update: (_, client, __) => AuthService(client),
         ),
@@ -66,6 +78,18 @@ class MyApp extends StatelessWidget {
           update: (_, oppService, sessionManager, __) =>
               OpportunityRepositoryImpl(oppService, sessionManager),
         ),
+        ProxyProvider2<http.Client, SessionManager, ProjectService>(
+
+           update: (_, client, sessionManager, __) => ProjectService(client, sessionManager),
+        ),
+
+        ProxyProvider2<ProjectService, FavoriteDao, ProjectRepository>(
+          update: (_, service, dao, __) => ProjectRepositoryImpl(service, dao),
+        ),
+
+
+//colocar aca los UseCases si es q los usan
+
         Provider<SignInUseCase>(
         create: (context) => SignInUseCase(context.read<AuthRepository>()),
           ),
@@ -103,7 +127,17 @@ Provider<DeleteOpportunityUseCase>(
 ),
 
 
+Provider<GetExploreProjectsUseCase>(
+  create: (context) => GetExploreProjectsUseCase(context.read<ProjectRepository>()),
+),
 
+Provider<GetFavoriteProjectsUseCase>(
+  create: (context) => GetFavoriteProjectsUseCase(context.read<ProjectRepository>()),
+),
+
+Provider<ToggleFavoriteProjectUseCase>(
+  create: (context) => ToggleFavoriteProjectUseCase(context.read<ProjectRepository>()),
+),
 
 
 
@@ -130,11 +164,10 @@ BlocProvider<OpportunityDetailBloc>(
         ),
       ],
       child: MaterialApp(
-        title: 'flutter_InnoSpaces',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+        title: 'flutter_InnoSpace',
+      theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system,
         
         initialRoute: '/',
         routes: {

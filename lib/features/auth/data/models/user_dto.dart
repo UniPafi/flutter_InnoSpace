@@ -25,7 +25,7 @@ User toDomain(int managerId) {
     id: id,
     email: email,
     token: token,
-    managerId: managerId, // Aceptable porque el Repositorio sabe quién es el Manager
+    managerId: managerId, 
   );
 }
 }
