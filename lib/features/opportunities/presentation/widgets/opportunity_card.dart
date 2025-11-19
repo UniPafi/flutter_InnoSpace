@@ -47,7 +47,6 @@ class OpportunityCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  // Estado
                   Chip(
                     label: Text(opportunity.status.name),
                     backgroundColor: _getStatusColor(opportunity.status),

@@ -28,5 +28,5 @@ class OpportunityDetailState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, opportunity, errorMessage, isDeleted]; // <-- AÑADIDO
+  List<Object?> get props => [status, opportunity, errorMessage, isDeleted]; 
 }

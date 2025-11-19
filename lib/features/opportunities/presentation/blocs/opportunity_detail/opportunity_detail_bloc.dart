@@ -64,7 +64,6 @@ class OpportunityDetailBloc extends Bloc<OpportunityDetailEvent, OpportunityDeta
     }
   }
 
-
   Future<void> _onDelete(
     DeleteOpportunity event,
     Emitter<OpportunityDetailState> emit,

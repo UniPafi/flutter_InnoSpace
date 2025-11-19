@@ -40,5 +40,5 @@ class CreateOpportunityState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, title, summary, description, category, requirements, errorMessage]; // <-- CORREGIDO A 2 'm'
+  List<Object?> get props => [status, title, summary, description, category, requirements, errorMessage]; 
 }
