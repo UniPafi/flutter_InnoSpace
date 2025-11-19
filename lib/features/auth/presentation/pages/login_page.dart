@@ -19,7 +19,6 @@ class LoginPage extends StatelessWidget {
               ..showSnackBar(SnackBar(content: Text(state.errorMessage ?? 'Error de Login')));
           }
           if (state.status == Status.success) {
-        
             Navigator.of(context).pushReplacementNamed('/main');
           }
         },
@@ -53,7 +52,7 @@ class LoginPage extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const RegisterPage(), // Proveer el BLoC en main.dart
+                      builder: (context) => const RegisterPage(), 
                     ));
                   },
                   child: const Text('¿No tienes cuenta? Regístrate'),
