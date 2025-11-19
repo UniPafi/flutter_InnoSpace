@@ -3,6 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_innospace/core/ui/theme.dart';
 import 'package:flutter_innospace/features/auth/domain/usecases/SignInUseCase.dart';
 import 'package:flutter_innospace/features/auth/domain/usecases/SignUpUseCase.dart';
+import 'package:flutter_innospace/features/explore/data/dao/favorite_dao.dart';
+import 'package:flutter_innospace/features/explore/data/repositories/project_repository_impl.dart';
+import 'package:flutter_innospace/features/explore/data/services/project_service.dart';
+import 'package:flutter_innospace/features/explore/domain/repositories/project_repository.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/get_explore_projects_use_case.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/get_favorite_projects_use_case.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/toggle_favorite_project_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/close_opportunity_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/create_opportunity_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/delete_opportunity_use_case.dart';
@@ -51,7 +58,17 @@ class MyApp extends StatelessWidget {
         Provider<SessionManager>(
           create: (_) => SessionManager(prefs),
         ),
-        
+        Provider<FavoriteDao>(
+  create: (_) => FavoriteDao(),
+),
+
+ProxyProvider<http.Client, ProjectService>(
+  update: (_, client, __) => ProjectService(client, context.read<SessionManager>()), // Necesita SessionManager para el token
+),
+
+ProxyProvider2<ProjectService, FavoriteDao, ProjectRepository>(
+  update: (_, service, dao, __) => ProjectRepositoryImpl(service, dao),
+),
         ProxyProvider<http.Client, AuthService>(
           update: (_, client, __) => AuthService(client),
         ),
@@ -67,6 +84,11 @@ class MyApp extends StatelessWidget {
           update: (_, oppService, sessionManager, __) =>
               OpportunityRepositoryImpl(oppService, sessionManager),
         ),
+
+
+
+//colocar aca los UseCases si es q los usan
+
         Provider<SignInUseCase>(
         create: (context) => SignInUseCase(context.read<AuthRepository>()),
           ),
@@ -104,7 +126,17 @@ Provider<DeleteOpportunityUseCase>(
 ),
 
 
+Provider<GetExploreProjectsUseCase>(
+  create: (context) => GetExploreProjectsUseCase(context.read<ProjectRepository>()),
+),
 
+Provider<GetFavoriteProjectsUseCase>(
+  create: (context) => GetFavoriteProjectsUseCase(context.read<ProjectRepository>()),
+),
+
+Provider<ToggleFavoriteProjectUseCase>(
+  create: (context) => ToggleFavoriteProjectUseCase(context.read<ProjectRepository>()),
+),
 
 
 

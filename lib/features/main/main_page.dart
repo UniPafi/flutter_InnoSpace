@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/get_explore_projects_use_case.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/get_favorite_projects_use_case.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/toggle_favorite_project_use_case.dart';
+import 'package:flutter_innospace/features/explore/presentation/blocs/explore_projects/explore_projects_bloc.dart';
+import 'package:flutter_innospace/features/explore/presentation/blocs/explore_projects/explore_projects_event.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/get_my_opportunities_use_case.dart';
 import '../auth/domain/repositories/auth_repository.dart'; 
 import 'package:flutter_innospace/features/opportunities/presentation/blocs/opportunity_list/opportunity_list_bloc.dart';
@@ -76,7 +81,15 @@ class _MainPageState extends State<MainPage> {
 
 
   static final List<Widget> _widgetOptions = <Widget>[
-    const ExplorePage(),
+   BlocProvider<ExploreBloc>(
+    create: (context) => ExploreBloc(
+        context.read<GetExploreProjectsUseCase>(),
+        context.read<GetFavoriteProjectsUseCase>(), // Nuevo
+        context.read<ToggleFavoriteProjectUseCase>(),
+    )..add(const FetchProjects(isFavoriteView: false)), // Carga inicial opcional
+    child: const ExplorePage(), 
+  ),
+
     BlocProvider<OpportunityListBloc>(
       create: (context) => OpportunityListBloc(context.read<GetMyOpportunitiesUseCase>()),
       child: const OpportunitiesPage(),

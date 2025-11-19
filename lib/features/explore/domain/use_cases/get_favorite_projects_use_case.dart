@@ -8,6 +8,6 @@ class GetFavoriteProjectsUseCase {
 
   Future<List<Project>> call() async {
  
-    return await _repository.getFavoriteProjects(); // <-- Nuevo método en el repositorio
+    return await _repository.getFavoriteProjects(); 
   }
 }

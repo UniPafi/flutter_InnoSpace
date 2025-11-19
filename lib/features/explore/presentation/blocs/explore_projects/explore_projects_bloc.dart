@@ -21,15 +21,21 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
     on<ToggleFavoriteProject>(_onToggleFavoriteProject);
   }
 
-  // --- Mapeo de Evento: FetchExploreProjects ---
 
-  Future<void> _onFetchExploreProjects(
-    FetchExploreProjects event,
+  Future<void> _onFetchProjects(
+    FetchProjects event,
     Emitter<ExploreState> emit,
   ) async {
-    emit(state.copyWith(status: Status.loading));
+    emit(state.copyWith(status: Status.loading, errorMessage: null));
     try {
-      final projects = await _getExploreProjectsUseCase.call();
+      final List<Project> projects;
+
+      if (event.isFavoriteView) {
+        projects = await _getFavoriteProjectsUseCase.call();
+      } else {
+        projects = await _getExploreProjectsUseCase.call();
+      }
+
       emit(state.copyWith(
         status: Status.success,
         projects: projects,
@@ -39,7 +45,6 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
     }
   }
 
-  // --- Mapeo de Evento: ToggleFavoriteProject ---
 
   Future<void> _onToggleFavoriteProject(
     ToggleFavoriteProject event,
