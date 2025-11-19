@@ -62,13 +62,7 @@ class MyApp extends StatelessWidget {
   create: (_) => FavoriteDao(),
 ),
 
-ProxyProvider<http.Client, ProjectService>(
-  update: (_, client, __) => ProjectService(client, context.read<SessionManager>()), // Necesita SessionManager para el token
-),
 
-ProxyProvider2<ProjectService, FavoriteDao, ProjectRepository>(
-  update: (_, service, dao, __) => ProjectRepositoryImpl(service, dao),
-),
         ProxyProvider<http.Client, AuthService>(
           update: (_, client, __) => AuthService(client),
         ),
@@ -84,7 +78,14 @@ ProxyProvider2<ProjectService, FavoriteDao, ProjectRepository>(
           update: (_, oppService, sessionManager, __) =>
               OpportunityRepositoryImpl(oppService, sessionManager),
         ),
+        ProxyProvider2<http.Client, SessionManager, ProjectService>(
 
+           update: (_, client, sessionManager, __) => ProjectService(client, sessionManager),
+        ),
+
+        ProxyProvider2<ProjectService, FavoriteDao, ProjectRepository>(
+          update: (_, service, dao, __) => ProjectRepositoryImpl(service, dao),
+        ),
 
 
 //colocar aca los UseCases si es q los usan

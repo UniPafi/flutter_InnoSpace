@@ -6,9 +6,7 @@ abstract class ExploreEvent extends Equatable {
   List<Object> get props => [];
 }
 
-// 1. Evento UNIFICADO para cargar la lista
 class FetchProjects extends ExploreEvent {
-  // Bandera para diferenciar: false = Explorar, true = Favoritos
   final bool isFavoriteView; 
 
   const FetchProjects({this.isFavoriteView = false});
@@ -17,7 +15,6 @@ class FetchProjects extends ExploreEvent {
   List<Object> get props => [isFavoriteView];
 }
 
-// 2. Evento para cambiar el estado de favorito (se mantiene igual)
 class ToggleFavoriteProject extends ExploreEvent {
   final int projectId;
 

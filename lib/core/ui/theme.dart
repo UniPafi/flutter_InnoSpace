@@ -3,23 +3,21 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Colores Base
-  static const Color primaryColor = Color(0xFF673AB7); // Morado Profundo (Deep Purple)
-  static const Color accentColor = Color(0xFF03A9F4);  // Celeste Vívido (Light Blue)
-  static const Color lightBackground = Color(0xFFF5F5F5); // Gris Claro para fondo
-  static const Color darkBackground = Color(0xFF121212);  // Gris Muy Oscuro para fondo
+  static const Color primaryColor = Color(0xFF673AB7); 
+  static const Color accentColor = Color(0xFF03A9F4);  
+  static const Color lightBackground = Color(0xFFF5F5F5); 
+  static const Color darkBackground = Color(0xFF121212);  
 
   // ==========================================================
-  // 1. Tema Claro (Light Theme)
+  //  Tema Claro 
   // ==========================================================
 static ThemeData get lightTheme => ThemeData(
-        // 1. Especificar el brillo del tema
+      
         brightness: Brightness.light, 
         primaryColor: primaryColor,
         colorScheme: ColorScheme.fromSeed(
-          // 2. ¡CRUCIAL! Pasar el brillo al ColorScheme.fromSeed
           seedColor: primaryColor,
-          brightness: Brightness.light, // <-- CORRECCIÓN APLICADA
+          brightness: Brightness.light, 
           primary: primaryColor,
           secondary: accentColor,
           background: lightBackground,
@@ -28,7 +26,7 @@ static ThemeData get lightTheme => ThemeData(
           onSecondary: Colors.black,
           onSurface: Colors.black87,
         ),
-        // ... (resto del tema se mantiene)
+        
         scaffoldBackgroundColor: lightBackground,
         appBarTheme: const AppBarTheme(
           backgroundColor: primaryColor,
@@ -51,17 +49,16 @@ static ThemeData get lightTheme => ThemeData(
       );
 
   // ==========================================================
-  // 2. Tema Oscuro (Dark Theme)
+  //  Tema Oscuro 
   // ==========================================================
 
   static ThemeData get darkTheme => ThemeData(
-        // 1. Especificar el brillo del tema
+        
         brightness: Brightness.dark,
         primaryColor: primaryColor,
         colorScheme: ColorScheme.fromSeed(
-          // 2. ¡CRUCIAL! Pasar el brillo al ColorScheme.fromSeed
           seedColor: primaryColor,
-          brightness: Brightness.dark, // <-- CORRECCIÓN APLICADA
+          brightness: Brightness.dark,
           primary: primaryColor,
           secondary: accentColor,
           background: darkBackground,
@@ -71,7 +68,7 @@ static ThemeData get lightTheme => ThemeData(
           onBackground: Colors.white70,
           onSurface: Colors.white,
         ),
-        // ... (resto del tema se mantiene)
+        
         scaffoldBackgroundColor: darkBackground,
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF1E1E1E),

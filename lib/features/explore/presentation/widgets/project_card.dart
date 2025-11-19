@@ -34,11 +34,10 @@ class ProjectCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
 
-            // Categoría
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: theme.colorScheme.secondary.withOpacity(0.15), // Celeste semi-transparente
+                color: theme.colorScheme.secondary.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -51,7 +50,6 @@ class ProjectCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
-            // Resumen
             Text(
               project.summary,
               style: theme.textTheme.bodyMedium,
@@ -65,6 +63,7 @@ class ProjectCard extends StatelessWidget {
               child: IconButton(
                 icon: Icon(
                   project.isFavorite ? Icons.favorite : Icons.favorite_border,
+                  // ignore: deprecated_member_use
                   color: project.isFavorite ? Colors.redAccent : theme.colorScheme.onSurface.withOpacity(0.5),
                   size: 28,
                 ),

@@ -9,15 +9,15 @@ import 'package:flutter_innospace/features/explore/presentation/blocs/explore_pr
 
 class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
   final GetExploreProjectsUseCase _getExploreProjectsUseCase;
-  final GetFavoriteProjectsUseCase _getFavoriteProjectsUseCase; // INYECCIÓN
+  final GetFavoriteProjectsUseCase _getFavoriteProjectsUseCase; 
   final ToggleFavoriteProjectUseCase _toggleFavoriteProjectUseCase;
 
   ExploreBloc(
     this._getExploreProjectsUseCase,
-    this._getFavoriteProjectsUseCase, // PASAR Use Case
+    this._getFavoriteProjectsUseCase,
     this._toggleFavoriteProjectUseCase,
   ) : super(const ExploreState()) {
-    on<FetchProjects>(_onFetchProjects); // Manejador unificado
+    on<FetchProjects>(_onFetchProjects);
     on<ToggleFavoriteProject>(_onToggleFavoriteProject);
   }
 
@@ -52,24 +52,22 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
   ) async {
     try {
       final projectId = event.projectId;
-      // 1. Encontrar el proyecto actual en el estado
+     
       final Project? currentProject = state.projects.firstWhere(
         (p) => p.id == projectId,
       );
 
       if (currentProject == null) return;
 
-      // 2. Determinar el nuevo estado
       final bool isCurrentlyFavorite = currentProject.isFavorite;
 
-      // 3. Llama al Use Case para actualizar la DB local (asíncrono)
-      // Nota: No bloqueamos la UI aquí con 'loading' a menos que sea un requisito específico.
+    
       await _toggleFavoriteProjectUseCase.call(
         projectId,
         isCurrentlyFavorite,
       );
 
-      // 4. Actualizar la lista en el estado de forma inmutable
+     
       final updatedProjects = state.projects.map((p) {
         return p.id == projectId
             ? p.copyWith(isFavorite: !isCurrentlyFavorite)
@@ -78,14 +76,12 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
 
       emit(state.copyWith(
         projects: updatedProjects,
-        // Mantener el status como success ya que la operación fue local y exitosa
       ));
     } catch (e) {
-      // Si falla la operación de DB (raro), emitir un error temporal
-      // Note: Idealmente, usaríamos un listener para mostrar un SnackBar
+   
       emit(state.copyWith(errorMessage: 'Fallo al actualizar favorito: ${e.toString()}'));
       
-      // Rápidamente volver al estado success para no bloquear la lista
+
       emit(state.copyWith(errorMessage: null)); 
     }
   }

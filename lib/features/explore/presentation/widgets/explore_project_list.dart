@@ -23,7 +23,7 @@ class ExploreProjectList extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
-        // 2. Manejo de estados: Error
+      
         if (state.status == Status.error) {
           return Center(
             child: Padding(
@@ -39,7 +39,7 @@ class ExploreProjectList extends StatelessWidget {
                     style: TextStyle(color: Theme.of(context).colorScheme.error),
                   ),
                   const SizedBox(height: 16),
-                  // Botón para reintentar la carga
+                  
                   ElevatedButton(
                     onPressed: () {
                       context.read<ExploreBloc>().add(FetchProjects(isFavoriteView: isFavoriteView));
@@ -54,7 +54,6 @@ class ExploreProjectList extends StatelessWidget {
         
         final projectsToShow = state.projects;
 
-        // 3. Manejo de estados: Lista vacía
         if (projectsToShow.isEmpty) {
           return Center(
             child: Padding(
@@ -80,7 +79,7 @@ class ExploreProjectList extends StatelessWidget {
             itemCount: projectsToShow.length,
             itemBuilder: (context, index) {
               final project = projectsToShow[index];
-              return ProjectCard(project: project); // Usamos la tarjeta que diseñamos
+              return ProjectCard(project: project); 
             },
           ),
         );

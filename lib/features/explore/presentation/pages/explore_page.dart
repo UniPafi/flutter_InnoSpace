@@ -13,7 +13,6 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStateMixin {
-  // Necesario para controlar las pestañas
   late TabController _tabController;
   
   final List<Tab> _tabs = const [
