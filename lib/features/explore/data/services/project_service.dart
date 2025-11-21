@@ -32,4 +32,32 @@ class ProjectService {
       throw Exception('Fallo al cargar proyectos: ${response.statusCode}');
     }
   }
+
+
+Future<ProjectDto> getProjectById(int projectId) async {
+  final String? token = _sessionManager.getAuthToken();
+  if (token == null) {
+    throw Exception('Usuario no autenticado');
+  }
+
+  final response = await _client.get(
+    Uri.parse('${ApiConstants.baseUrl}/projects/$projectId'), 
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    return ProjectDto.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  } else {
+    throw Exception('Fallo al cargar el proyecto $projectId: ${response.statusCode}');
+  }
+}
+
+
+
+
+
+
 }
