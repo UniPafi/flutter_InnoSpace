@@ -5,11 +5,17 @@ import 'package:flutter_innospace/features/auth/domain/usecases/SignInUseCase.da
 import 'package:flutter_innospace/features/auth/domain/usecases/SignUpUseCase.dart';
 import 'package:flutter_innospace/features/explore/data/dao/favorite_dao.dart';
 import 'package:flutter_innospace/features/explore/data/repositories/project_repository_impl.dart';
+import 'package:flutter_innospace/features/explore/data/repositories/student_profile_repository_impl.dart';
 import 'package:flutter_innospace/features/explore/data/services/project_service.dart';
+import 'package:flutter_innospace/features/explore/data/services/student_profile_service.dart';
 import 'package:flutter_innospace/features/explore/domain/repositories/project_repository.dart';
+import 'package:flutter_innospace/features/explore/domain/repositories/student_profile_repository.dart';
 import 'package:flutter_innospace/features/explore/domain/use_cases/get_explore_projects_use_case.dart';
 import 'package:flutter_innospace/features/explore/domain/use_cases/get_favorite_projects_use_case.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/get_project_detail_use_case.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/get_student_profile_use_case.dart';
 import 'package:flutter_innospace/features/explore/domain/use_cases/toggle_favorite_project_use_case.dart';
+import 'package:flutter_innospace/features/explore/presentation/blocs/project_detail/project_detail_bloc.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/close_opportunity_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/create_opportunity_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/delete_opportunity_use_case.dart';
@@ -86,10 +92,17 @@ class MyApp extends StatelessWidget {
         ProxyProvider2<ProjectService, FavoriteDao, ProjectRepository>(
           update: (_, service, dao, __) => ProjectRepositoryImpl(service, dao),
         ),
-
-
+        
+        ProxyProvider2<http.Client, SessionManager, StudentProfileService>(
+           update: (_, client, sessionManager, __) => StudentProfileService(client, sessionManager),
+        ),
+        ProxyProvider<StudentProfileService, StudentProfileRepository>(
+          update: (_, service, __) => StudentProfileRepositoryImpl(service),
+        ),
 //colocar aca los UseCases si es q los usan
 
+
+//USECASES DE FEATURE AUTH
         Provider<SignInUseCase>(
         create: (context) => SignInUseCase(context.read<AuthRepository>()),
           ),
@@ -100,6 +113,7 @@ class MyApp extends StatelessWidget {
           create: (context) => SignOutUseCase(context.read<AuthRepository>()),
           ),
 
+//USECASES DE FEATURE MY OPPORTUNITIES
         Provider<CreateOpportunityUseCase>(
            create: (context) => CreateOpportunityUseCase(
             context.read<OpportunityRepository>(),
@@ -126,7 +140,7 @@ Provider<DeleteOpportunityUseCase>(
     create: (context) => DeleteOpportunityUseCase(context.read<OpportunityRepository>()),
 ),
 
-
+//USECASES DE FEATURE EXPLORE
 Provider<GetExploreProjectsUseCase>(
   create: (context) => GetExploreProjectsUseCase(context.read<ProjectRepository>()),
 ),
@@ -139,13 +153,27 @@ Provider<ToggleFavoriteProjectUseCase>(
   create: (context) => ToggleFavoriteProjectUseCase(context.read<ProjectRepository>()),
 ),
 
+Provider<GetStudentProfileUseCase>(
+  create: (context) => GetStudentProfileUseCase(context.read<StudentProfileRepository>()),
+),
 
+
+Provider<GetProjectDetailUseCase>(
+  create: (context) => GetProjectDetailUseCase(context.read<ProjectRepository>()),
+),
 
 
 BlocProvider<OpportunityListBloc>(
     create: (context) => OpportunityListBloc(
         context.read<GetMyOpportunitiesUseCase>(),
     ),
+),
+
+BlocProvider<ProjectDetailBloc>(
+  create: (context) => ProjectDetailBloc(
+    context.read<GetProjectDetailUseCase>(), 
+    context.read<GetStudentProfileUseCase>(), 
+  ),
 ),
 
 BlocProvider<OpportunityDetailBloc>(

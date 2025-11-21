@@ -6,4 +6,5 @@ Future<List<Project>> getFavoriteProjects();
   Future<void> toggleFavoriteStatus(int projectId, bool isCurrentlyFavorite);
 
   Future<bool> isProjectFavorite(int projectId); 
+  Future<Project> getProjectById(int projectId);
 }
