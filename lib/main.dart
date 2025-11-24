@@ -37,6 +37,10 @@ import 'features/main/main_page.dart';
 import 'features/opportunities/data/repositories/opportunity_repository_impl.dart';
 import 'features/opportunities/data/services/opportunity_service.dart';
 import 'features/opportunities/domain/repositories/opportunity_repository.dart';
+import 'features/opportunities/domain/use-cases/get_student_applications_use_case.dart';
+import 'features/opportunities/domain/use-cases/accept_student_application_use_case.dart';
+import 'features/opportunities/domain/use-cases/reject_student_application_use_case.dart';
+
 
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -160,6 +164,19 @@ Provider<GetStudentProfileUseCase>(
 
 Provider<GetProjectDetailUseCase>(
   create: (context) => GetProjectDetailUseCase(context.read<ProjectRepository>()),
+),
+
+
+Provider<GetStudentApplicationsUseCase>(
+    create: (context) => GetStudentApplicationsUseCase(context.read<OpportunityRepository>()),
+),
+
+Provider<AcceptStudentApplicationUseCase>(
+    create: (context) => AcceptStudentApplicationUseCase(context.read<OpportunityRepository>()),
+),
+
+Provider<RejectStudentApplicationUseCase>(
+    create: (context) => RejectStudentApplicationUseCase(context.read<OpportunityRepository>()),
 ),
 
 
