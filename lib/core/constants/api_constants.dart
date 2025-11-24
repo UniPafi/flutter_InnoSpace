@@ -10,5 +10,7 @@ class ApiConstants {
   static const String opportunities = "/opportunities";
   static const String opportunitiesByCompany = "/opportunities/company"; 
   static const String publishOpportunity = "/publish"; 
-  static const String closeOpportunity = "/close";   
+  static const String closeOpportunity = "/close";
+
+  static const String opportunityCards = "/opportunity-cards/opportunities";
 }

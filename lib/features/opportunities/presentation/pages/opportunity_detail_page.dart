@@ -7,6 +7,7 @@ import 'package:flutter_innospace/features/opportunities/domain/use-cases/delete
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/get_opportunity_by_id_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/publish_opportunity_use_case.dart';
 import '../blocs/opportunity_detail/opportunity_detail_bloc.dart';
+import 'package:flutter_innospace/features/opportunities/presentation/pages/student_applications_page.dart';
 
 class OpportunityDetailPage extends StatelessWidget {
   final int opportunityId;
@@ -173,6 +174,26 @@ class OpportunityDetailPage extends StatelessWidget {
     final bloc = context.read<OpportunityDetailBloc>();
     
     List<Widget> buttons = [];
+
+    if (opportunity.status != OpportunityStatus.DRAFT) {
+      buttons.add(
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => StudentApplicationsPage(opportunityId: opportunity.id),
+              ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blueAccent, // Un color distintivo
+            minimumSize: const Size(double.infinity, 40),
+          ),
+          child: const Text('Ver Postulantes'),
+        ),
+      );
+      buttons.add(const SizedBox(height: 12)); // Espaciado
+    }
 
     if (opportunity.status == OpportunityStatus.DRAFT) {
       buttons.add(

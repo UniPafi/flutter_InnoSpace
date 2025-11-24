@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_innospace/core/constants/api_constants.dart';
 import '../models/create_opportunity_dto.dart';
 import '../models/opportunity_dto.dart';
+import '../models/student_application_dto.dart';
+import '../models/student_profile_dto.dart';
 
 class OpportunityService {
   final http.Client _client;
@@ -121,6 +123,78 @@ class OpportunityService {
       return; 
     } else {
       throw Exception('Error al eliminar convocatoria (Código: ${response.statusCode}): ${response.body}');
+    }
+  }
+
+  Future<List<StudentApplicationDto>> getStudentApplications(String token, int opportunityId) async {
+    final uri = Uri.parse("$_baseUrl${ApiConstants.opportunityCards}/$opportunityId");
+    
+    final response = await _client.get(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonList = jsonDecode(utf8.decode(response.bodyBytes));
+      return jsonList.map((json) => StudentApplicationDto.fromJson(json)).toList();
+    } else {
+      throw Exception('Error al cargar postulantes (Código: ${response.statusCode}): ${response.body}');
+    }
+  }
+
+  Future<void> acceptStudentApplication(String token, int applicationId) async {
+    final uri = Uri.parse("$_baseUrl/student-applications/$applicationId/accept");
+    
+    final response = await _client.patch(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Error al aceptar postulación (Código: ${response.statusCode}): ${response.body}');
+    }
+  }
+
+  Future<void> rejectStudentApplication(String token, int applicationId) async {
+    final uri = Uri.parse("$_baseUrl/student-applications/$applicationId/reject");
+    
+    final response = await _client.patch(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Error al rechazar postulación (Código: ${response.statusCode}): ${response.body}');
+    }
+  }
+
+  Future<StudentProfileDto> getStudentProfile(String token, int studentId) async {
+    // Asumimos que studentId es el ID que requiere el endpoint de profiles
+    final uri = Uri.parse("$_baseUrl/student-profiles/$studentId");
+    
+    final response = await _client.get(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return StudentProfileDto.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+    } else {
+      // Si falla (ej. 404), retornamos un perfil vacío o lanzamos excepción
+      // Para no romper la UI, lanzamos excepción y la manejaremos en el repositorio
+      throw Exception('Error al cargar perfil $studentId: ${response.statusCode}');
     }
   }
 }
