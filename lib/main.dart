@@ -4,16 +4,20 @@ import 'package:flutter_innospace/core/ui/theme.dart';
 import 'package:flutter_innospace/features/auth/domain/usecases/SignInUseCase.dart';
 import 'package:flutter_innospace/features/auth/domain/usecases/SignUpUseCase.dart';
 import 'package:flutter_innospace/features/explore/data/dao/favorite_dao.dart';
+import 'package:flutter_innospace/features/explore/data/repositories/collaboration_repository_impl.dart';
 import 'package:flutter_innospace/features/explore/data/repositories/project_repository_impl.dart';
 import 'package:flutter_innospace/features/explore/data/repositories/student_profile_repository_impl.dart';
+import 'package:flutter_innospace/features/explore/data/services/collaboration_service.dart';
 import 'package:flutter_innospace/features/explore/data/services/project_service.dart';
 import 'package:flutter_innospace/features/explore/data/services/student_profile_service.dart';
+import 'package:flutter_innospace/features/explore/domain/repositories/collaboration_repository.dart';
 import 'package:flutter_innospace/features/explore/domain/repositories/project_repository.dart';
 import 'package:flutter_innospace/features/explore/domain/repositories/student_profile_repository.dart';
 import 'package:flutter_innospace/features/explore/domain/use_cases/get_explore_projects_use_case.dart';
 import 'package:flutter_innospace/features/explore/domain/use_cases/get_favorite_projects_use_case.dart';
 import 'package:flutter_innospace/features/explore/domain/use_cases/get_project_detail_use_case.dart';
 import 'package:flutter_innospace/features/explore/domain/use_cases/get_student_profile_use_case.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/send_collaboration_request_use_case.dart';
 import 'package:flutter_innospace/features/explore/domain/use_cases/toggle_favorite_project_use_case.dart';
 import 'package:flutter_innospace/features/explore/presentation/blocs/project_detail/project_detail_bloc.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/close_opportunity_use_case.dart';
@@ -103,6 +107,21 @@ class MyApp extends StatelessWidget {
         ProxyProvider<StudentProfileService, StudentProfileRepository>(
           update: (_, service, __) => StudentProfileRepositoryImpl(service),
         ),
+ProxyProvider2<http.Client, SessionManager, CollaborationService>(
+  update: (_, client, sessionManager, __) => CollaborationService(client, sessionManager),
+),
+
+
+ProxyProvider<CollaborationService, CollaborationRepository>(
+  update: (_, service, __) => CollaborationRepositoryImpl(service),
+),
+
+
+Provider<SendCollaborationRequestUseCase>(
+  create: (context) => SendCollaborationRequestUseCase(context.read<CollaborationRepository>()),
+),
+
+
 //colocar aca los UseCases si es q los usan
 
 
@@ -190,6 +209,7 @@ BlocProvider<ProjectDetailBloc>(
   create: (context) => ProjectDetailBloc(
     context.read<GetProjectDetailUseCase>(), 
     context.read<GetStudentProfileUseCase>(), 
+    context.read<SendCollaborationRequestUseCase>(),
   ),
 ),
 

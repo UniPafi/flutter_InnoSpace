@@ -12,3 +12,14 @@ class FetchProjectDetail extends ProjectDetailEvent {
   @override
   List<Object> get props => [projectId];
 }
+
+class SendCollaborationRequest extends ProjectDetailEvent {
+  final int projectId;
+
+  const SendCollaborationRequest(this.projectId);
+
+  @override
+  List<Object> get props => [projectId];
+}
+
+class ResetCollaborationRequestStatus extends ProjectDetailEvent {}
