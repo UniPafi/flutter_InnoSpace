@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_innospace/features/explore/domain/models/project.dart';
 import 'package:flutter_innospace/features/explore/domain/use_cases/get_project_detail_use_case.dart';
 import 'package:flutter_innospace/features/explore/domain/use_cases/get_student_profile_use_case.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/send_collaboration_request_use_case.dart';
 import 'package:flutter_innospace/features/explore/presentation/blocs/explore_projects/explore_projects_bloc.dart';
 import 'package:flutter_innospace/features/explore/presentation/blocs/explore_projects/explore_projects_event.dart';
 import 'package:flutter_innospace/features/explore/presentation/blocs/project_detail/project_detail_bloc.dart';
@@ -22,18 +23,19 @@ class ProjectCard extends StatelessWidget {
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-child: InkWell( // Usamos InkWell para dar feedback visual al usuario al hacer clic
+child: InkWell( 
         onTap: () {
-          // 1. Navegamos a la nueva ruta
+          
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => BlocProvider<ProjectDetailBloc>(
-                // 2. Creamos el BLoC de detalle de proyecto e inyectamos sus Use Cases
+                
                 create: (context) => ProjectDetailBloc(
                   context.read<GetProjectDetailUseCase>(),
                   context.read<GetStudentProfileUseCase>(),
+                  context.read<SendCollaborationRequestUseCase>(),
                 ),
-                // 3. Pasamos el ID del proyecto a la página de detalle
+               
                 child: ProjectDetailPage(projectId: project.id),
               ),
             ),

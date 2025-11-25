@@ -15,7 +15,7 @@ class ProjectRepositoryImpl implements ProjectRepository {
   Future<List<Project>> getExploreProjects() async {
     final projectDtos = await _service.getAllProjects();
     
-    final List<int> favoriteIds = []; 
+   
 
     final List<Project> projects = [];
     for (var dto in projectDtos) {
