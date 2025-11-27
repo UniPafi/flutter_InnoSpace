@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_innospace/core/ui/theme.dart';
@@ -206,8 +205,8 @@ Provider<RejectStudentApplicationUseCase>(
 
 //USECASES DE POSTULATIONS
 
-ProxyProvider<http.Client, PostulationsService>(
-  update: (_, client, __) => PostulationsService(client),
+ProxyProvider2<http.Client, SessionManager, PostulationsService>(
+  update: (_, client, sessionManager, __) => PostulationsService(client, sessionManager),
 ),
 
 ProxyProvider<PostulationsService, PostulationsRepository>(
@@ -218,15 +217,6 @@ Provider<GetPostulationsUseCase>(
   create: (context) =>
       GetPostulationsUseCase(context.read<PostulationsRepository>()),
 ),
-
-
-BlocProvider<PostulationsBloc>(
-  create: (context) =>
-      PostulationsBloc(context.read<GetPostulationsUseCase>()),
-),
-
-
-
 
 BlocProvider<OpportunityListBloc>(
     create: (context) => OpportunityListBloc(

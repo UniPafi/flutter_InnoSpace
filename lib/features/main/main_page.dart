@@ -24,33 +24,8 @@ class RequestsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int? managerId;
-    try {
-      final sessionManager = context.read<SessionManager>();
-      managerId = sessionManager
-          .getManagerId();
-    } catch (_) {
-      managerId = null;
-    }
-    if (managerId == null) {
-      try {
-        final loginState = context.read<LoginBloc>().state;
-        if (loginState.status == Status.success && loginState.user != null) {
-          managerId =
-              loginState.user!.managerId;
-        }
-      } catch (_) {
-        managerId = null;
-      }
-    }
-    if (managerId != null) {
-      return BlocProvider(
-        create: (context) =>
-            PostulationsBloc(context.read<GetPostulationsUseCase>())
-              ..add(LoadPostulationsEvent(managerId!)),
-        child: PostulationsPage(managerId: managerId!),
-      );
-    } else {
+    final sessionManager = context.read<SessionManager>();
+    if (!sessionManager.isLoggedIn()) {
       return Scaffold(
         appBar: AppBar(title: const Text('Solicitudes')),
         body: Center(
@@ -67,9 +42,7 @@ class RequestsPage extends StatelessWidget {
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(
-                    context,
-                  ).pushNamedAndRemoveUntil('/', (route) => false);
+                  Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
                 },
                 child: const Text('Volver a Iniciar Sesión'),
               ),
@@ -78,6 +51,17 @@ class RequestsPage extends StatelessWidget {
         ),
       );
     }
+
+    final managerId = sessionManager.getManagerId();
+
+    return BlocProvider(
+      create: (context) => PostulationsBloc(
+        context.read<GetPostulationsUseCase>(),
+      )..add(LoadPostulationsEvent(managerId!)),
+      child: managerId != null
+          ? PostulationsPage(managerId: managerId!)
+          : const Center(child: Text('ID de manager no disponible')),
+    );
   }
 }
 
