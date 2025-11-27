@@ -1,4 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Permisos requeridos para red y acceso a medios (imagen/cámara) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Para Android <= 12 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- Para Android 13+ -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- Si habilitas tomar fotos con cámara -->
+    <uses-permission android:name="android.permission.CAMERA" />
     <application
         android:label="flutter_innospace"
         android:name="${applicationName}"

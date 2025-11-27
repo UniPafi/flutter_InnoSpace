@@ -45,5 +45,12 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Descripciones de privacidad necesarias para acceso a cámara y fotos -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>La app necesita acceder a la biblioteca de fotos para permitir seleccionar imagen de perfil.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>La app necesita acceder a la cámara para tomar una foto de perfil.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>La app necesita permiso para guardar fotos en la biblioteca si se solicita.</string>
 </dict>
 </plist>
