@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -20,8 +18,7 @@ static ThemeData get lightTheme => ThemeData(
           brightness: Brightness.light, 
           primary: primaryColor,
           secondary: accentColor,
-          background: lightBackground,
-          surface: Colors.white,
+          surface: lightBackground,
           onPrimary: Colors.white,
           onSecondary: Colors.black,
           onSurface: Colors.black87,
@@ -61,12 +58,10 @@ static ThemeData get lightTheme => ThemeData(
           brightness: Brightness.dark,
           primary: primaryColor,
           secondary: accentColor,
-          background: darkBackground,
           surface: const Color(0xFF1E1E1E), 
           onPrimary: Colors.white,
           onSecondary: Colors.black,
-          onBackground: Colors.white70,
-          onSurface: Colors.white,
+          onSurface: Colors.white70,
         ),
         
         scaffoldBackgroundColor: darkBackground,

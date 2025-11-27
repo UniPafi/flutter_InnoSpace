@@ -73,7 +73,7 @@ class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStat
           tabs: _tabs,
           // Ajustes de color para la TabBar
           labelColor: Theme.of(context).colorScheme.onPrimary,
-          unselectedLabelColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
+          unselectedLabelColor: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),
           indicatorColor: Theme.of(context).colorScheme.secondary, // Celeste
         ),
       ),
