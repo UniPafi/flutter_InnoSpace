@@ -16,7 +16,7 @@ class PostulationsService {
       throw Exception('Usuario no autenticado');
     }
 
-    final url = Uri.parse('${ApiConstants.baseUrl}/collaborations/manager/$managerId');
+    final url = Uri.parse('${ApiConstants.baseUrl}/collaboration-cards/managers/$managerId');
 
     final response = await _client.get(
       url,
