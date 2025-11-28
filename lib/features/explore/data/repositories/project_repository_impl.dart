@@ -14,7 +14,8 @@ class ProjectRepositoryImpl implements ProjectRepository {
   @override
   Future<List<Project>> getExploreProjects() async {
     final projectDtos = await _service.getAllProjects();
-
+    final List<int> favoriteIds = []; 
+    
     final List<Project> projects = [];
     for (var dto in projectDtos) {
       if (dto.status == 'PUBLISHED') {

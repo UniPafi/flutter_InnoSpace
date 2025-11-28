@@ -7,12 +7,9 @@ import 'package:flutter_innospace/features/explore/presentation/blocs/explore_pr
 import 'package:flutter_innospace/features/explore/presentation/blocs/explore_projects/explore_projects_event.dart';
 import 'package:flutter_innospace/features/explore/presentation/pages/explore_page.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/get_my_opportunities_use_case.dart';
-import '../auth/domain/repositories/auth_repository.dart'; 
 import 'package:flutter_innospace/features/opportunities/presentation/blocs/opportunity_list/opportunity_list_bloc.dart';
 import 'package:flutter_innospace/features/opportunities/presentation/pages/opportunities_page.dart';
-
-import 'package:flutter_innospace/features/auth/presentation/blocs/login/login_bloc.dart';
-
+import 'package:flutter_innospace/features/profile/presentation/pages/profile_page.dart';
 
 
 
@@ -23,43 +20,6 @@ class RequestsPage extends StatelessWidget {
         appBar: AppBar(title: const Text('Solicitudes')),
         body: const Center(child: Text('Solicitudes (Próximamente)')),
       ); 
-}
-
-class ProfilePage extends StatelessWidget { 
-  const ProfilePage({super.key}); 
-  
-  @override 
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mi Perfil'),
-        automaticallyImplyLeading: false, 
-      ),
-      body: Center(
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.redAccent,
-            foregroundColor: Colors.white,
-          ),
-          child: const Text('Cerrar Sesión'),
-          onPressed: () async {
-        
-            final authRepo = context.read<AuthRepository>();
-            final loginBloc = context.read<LoginBloc>();
-            
-            await authRepo.signOut();
-            
-            
-            loginBloc.add(LoginReset());
-
-            if (context.mounted) {
-              Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-            }
-          },
-        ),
-      ),
-    );
-  }
 }
 
 

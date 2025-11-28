@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
         ),
         ProxyProvider2<OpportunityService, SessionManager, 
            OpportunityRepository>( 
-          update: (_, oppService, sessionManager, _) =>
+          update: (_, oppService, sessionManager, __) =>
               OpportunityRepositoryImpl(oppService, sessionManager),
         ),
         ProxyProvider2<http.Client, SessionManager, ProjectService>(

@@ -66,6 +66,7 @@ class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     // Usamos el color primario del tema para el AppBar
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: const Text('Proyectos'),
         bottom: TabBar(
