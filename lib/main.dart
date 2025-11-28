@@ -31,6 +31,12 @@ import 'features/main/main_page.dart';
 import 'features/opportunities/data/repositories/opportunity_repository_impl.dart';
 import 'features/opportunities/data/services/opportunity_service.dart';
 import 'features/opportunities/domain/repositories/opportunity_repository.dart';
+import 'features/profile/data/repositories/profile_repository_impl.dart';
+import 'features/profile/data/services/profile_service.dart';
+import 'features/profile/domain/repositories/profile_repository.dart';
+import 'features/profile/domain/use_cases/get_manager_profile_use_case.dart';
+import 'features/profile/domain/use_cases/update_manager_profile_use_case.dart';
+import "features/profile/presentation/blocs/profile/profile_bloc.dart";
 
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -59,9 +65,8 @@ class MyApp extends StatelessWidget {
           create: (_) => SessionManager(prefs),
         ),
         Provider<FavoriteDao>(
-  create: (_) => FavoriteDao(),
-),
-
+        create: (_) => FavoriteDao(),
+       ),
 
         ProxyProvider<http.Client, AuthService>(
           update: (_, client, __) => AuthService(client),
@@ -74,22 +79,29 @@ class MyApp extends StatelessWidget {
           update: (_, authService, sessionManager, __) =>
               AuthRepositoryImpl(authService, sessionManager),
         ),
-        ProxyProvider2<OpportunityService, SessionManager, OpportunityRepository>( 
+        ProxyProvider2<OpportunityService, SessionManager, 
+           OpportunityRepository>( 
           update: (_, oppService, sessionManager, _) =>
               OpportunityRepositoryImpl(oppService, sessionManager),
         ),
         ProxyProvider2<http.Client, SessionManager, ProjectService>(
-
-           update: (_, client, sessionManager, __) => ProjectService(client, sessionManager),
+           update: (_, client, sessionManager, __) =>
+            ProjectService(client, sessionManager),
         ),
 
         ProxyProvider2<ProjectService, FavoriteDao, ProjectRepository>(
           update: (_, service, dao, __) => ProjectRepositoryImpl(service, dao),
         ),
-
-
-//colocar aca los UseCases si es q los usan
-
+        
+        
+        ProxyProvider<http.Client, ProfileService>(
+          update: (_, client, __) => ProfileService(client),
+        ),
+        ProxyProvider2<ProfileService, SessionManager, ProfileRepository>(
+          update: (_, profileService, sessionManager, __) =>
+              ProfileRepositoryImpl(profileService, sessionManager),
+        ),
+        
         Provider<SignInUseCase>(
         create: (context) => SignInUseCase(context.read<AuthRepository>()),
           ),
@@ -104,31 +116,37 @@ class MyApp extends StatelessWidget {
            create: (context) => CreateOpportunityUseCase(
             context.read<OpportunityRepository>(),
             context.read<SessionManager>(), 
-  ),
-),
-Provider<GetMyOpportunitiesUseCase>(
-    create: (context) => GetMyOpportunitiesUseCase(context.read<OpportunityRepository>()),
-),
+        ),
+        ),
+        Provider<GetMyOpportunitiesUseCase>(
+         create: (context) => 
+         GetMyOpportunitiesUseCase(context.read<OpportunityRepository>()),
+        ),
 
 Provider<GetOpportunityByIdUseCase>(
-    create: (context) => GetOpportunityByIdUseCase(context.read<OpportunityRepository>()),
+    create: (context) =>
+     GetOpportunityByIdUseCase(context.read<OpportunityRepository>()),
 ),
 
 Provider<PublishOpportunityUseCase>(
-    create: (context) => PublishOpportunityUseCase(context.read<OpportunityRepository>()),
+    create: (context) => 
+    PublishOpportunityUseCase(context.read<OpportunityRepository>()),
 ),
 
 Provider<CloseOpportunityUseCase>(
-    create: (context) => CloseOpportunityUseCase(context.read<OpportunityRepository>()),
+    create: (context) => 
+    CloseOpportunityUseCase(context.read<OpportunityRepository>()),
 ),
 
 Provider<DeleteOpportunityUseCase>(
-    create: (context) => DeleteOpportunityUseCase(context.read<OpportunityRepository>()),
+    create: (context) => 
+    DeleteOpportunityUseCase(context.read<OpportunityRepository>()),
 ),
 
 
 Provider<GetExploreProjectsUseCase>(
-  create: (context) => GetExploreProjectsUseCase(context.read<ProjectRepository>()),
+  create: (context) => 
+  GetExploreProjectsUseCase(context.read<ProjectRepository>()),
 ),
 
 Provider<GetFavoriteProjectsUseCase>(
@@ -139,8 +157,14 @@ Provider<ToggleFavoriteProjectUseCase>(
   create: (context) => ToggleFavoriteProjectUseCase(context.read<ProjectRepository>()),
 ),
 
-
-
+Provider<GetManagerProfileUseCase>(
+ create: (context) =>
+ GetManagerProfileUseCase(context.read<ProfileRepository>()),
+),
+Provider<UpdateManagerProfileUseCase>(
+  create: (context) =>
+  UpdateManagerProfileUseCase(context.read<ProfileRepository>()),
+),
 
 BlocProvider<OpportunityListBloc>(
     create: (context) => OpportunityListBloc(
@@ -162,10 +186,17 @@ BlocProvider<OpportunityDetailBloc>(
         BlocProvider<RegisterBloc>(
           create: (context) => RegisterBloc(context.read<SignUpUseCase>()),
         ),
+         BlocProvider<ProfileBloc>(
+          create: (context) => ProfileBloc(
+            context.read<GetManagerProfileUseCase>(),
+            context.read<UpdateManagerProfileUseCase>(),
+          ),
+        ),
       ],
       child: MaterialApp(
         title: 'flutter_InnoSpace',
-      theme: AppTheme.lightTheme,
+       debugShowCheckedModeBanner: false,
+       theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
         

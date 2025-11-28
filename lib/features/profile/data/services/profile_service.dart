@@ -1,20 +1,15 @@
 import 'dart:convert';
-import 'package:flutter_innospace/core/constants/api_constants.dart';
-import 'package:flutter_innospace/core/services/session_manager.dart';
-import 'package:flutter_innospace/features/auth/data/models/manager_profile_dto.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_innospace/core/constants/api_constants.dart';
+import 'package:flutter_innospace/features/auth/data/models/manager_profile_dto.dart';
 
 class ProfileService {
   final http.Client _client;
-  final SessionManager _sessionManager;
 
-  ProfileService(this._client, this._sessionManager);
+  ProfileService(this._client);
 
-  Future<ManagerProfileDto> getManagerProfile(int managerId) async {
-    final String? token = _sessionManager.getAuthToken();
-    if (token == null) {
-      throw Exception('Usuario no autenticado');
-    }
+  Future<ManagerProfileDto> getManagerProfile(
+      int managerId, String token) async {
     final uri = Uri.parse(
         '${ApiConstants.baseUrl}${ApiConstants.managerProfiles}/$managerId');
 
@@ -35,12 +30,9 @@ class ProfileService {
 
   Future<ManagerProfileDto> updateManagerProfile(
     int managerId,
+    String token,
     Map<String, dynamic> profileData,
   ) async {
-    final String? token = _sessionManager.getAuthToken();
-    if (token == null) {
-      throw Exception('Usuario no autenticado');
-    }
     final uri = Uri.parse(
         '${ApiConstants.baseUrl}${ApiConstants.managerProfiles}/$managerId');
 

@@ -11,7 +11,12 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
   @override
   Future<ManagerProfile> getManagerProfile(int managerId) async {
-    final dto = await _service.getManagerProfile(managerId);
+    final token = _sessionManager.getAuthToken();
+    if (token == null) {
+      throw Exception('No hay sesión activa');
+    }
+
+    final dto = await _service.getManagerProfile(managerId, token);
 
     // Convertir DTO a Model
     return ManagerProfile(
@@ -31,6 +36,11 @@ class ProfileRepositoryImpl implements ProfileRepository {
   @override
   Future<ManagerProfile> updateManagerProfile(
       int managerId, ManagerProfile profile) async {
+    final token = _sessionManager.getAuthToken();
+    if (token == null) {
+      throw Exception('No hay sesión activa');
+    }
+
     final profileData = {
       'name': profile.name,
       'photoUrl': profile.photoUrl,
@@ -42,7 +52,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
       'companyTechnologies': profile.companyTechnologies,
     };
 
-    final dto = await _service.updateManagerProfile(managerId, profileData);
+    final dto =
+        await _service.updateManagerProfile(managerId, token, profileData);
 
     return ManagerProfile(
       id: dto.id,
