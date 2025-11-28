@@ -45,13 +45,6 @@ class PostulationCardWidget extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 4),
-
-                  Text(
-                    postulation.companyName,
-                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-                  ),
-
                   const SizedBox(height: 8),
 
                   Text(
