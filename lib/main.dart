@@ -208,7 +208,7 @@ Provider<GetManagerProfileUseCase>(
 ),
 Provider<UpdateManagerProfileUseCase>(
   create: (context) =>
-  UpdateManagerProfileUseCase(context.read<ProfileRepository>()),
+  UpdateManagerProfileUseCase(context.read<ProfileRepository>()),),
 Provider<GetStudentProfileUseCase>(
   create: (context) => GetStudentProfileUseCase(context.read<StudentProfileRepository>()),
 ),
