@@ -61,7 +61,7 @@ child: InkWell(
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: theme.colorScheme.secondary.withOpacity(0.15),
+                color: theme.colorScheme.secondary.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -87,15 +87,14 @@ child: InkWell(
               child: IconButton(
                 icon: Icon(
                   project.isFavorite ? Icons.favorite : Icons.favorite_border,
-                  // ignore: deprecated_member_use
-                  color: project.isFavorite ? Colors.redAccent : theme.colorScheme.onSurface.withOpacity(0.5),
+                  color: project.isFavorite ? Colors.redAccent : theme.colorScheme.onSurface.withValues(alpha: 0.5),
                   size: 28,
                 ),
                 onPressed: () {
                   context.read<ExploreBloc>().add(ToggleFavoriteProject(project.id));
                   
                 
-                  final currentTab = DefaultTabController.of(context)?.index ?? 0;
+                  final currentTab = DefaultTabController.of(context).index;
                   final isFavView = currentTab == 1;
                   context.read<ExploreBloc>().add(FetchProjects(isFavoriteView: isFavView));
                 },

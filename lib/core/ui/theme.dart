@@ -1,6 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'dart:ui' show Color;
 
 class AppTheme {
   static const Color primaryColor = Color(0xFF673AB7); 
@@ -20,8 +19,7 @@ static ThemeData get lightTheme => ThemeData(
           brightness: Brightness.light, 
           primary: primaryColor,
           secondary: accentColor,
-          background: lightBackground,
-          surface: Colors.white,
+          surface: lightBackground,
           onPrimary: Colors.white,
           onSecondary: Colors.black,
           onSurface: Colors.black87,
@@ -66,7 +64,7 @@ static ThemeData get lightTheme => ThemeData(
           onPrimary: Colors.white,
           onSecondary: Colors.black,
           onBackground: Colors.white70,
-          onSurface: Colors.white,
+          onSurface: Colors.white70,
         ),
         
         scaffoldBackgroundColor: darkBackground,
