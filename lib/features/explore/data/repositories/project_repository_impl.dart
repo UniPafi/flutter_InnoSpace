@@ -16,6 +16,9 @@ class ProjectRepositoryImpl implements ProjectRepository {
     final projectDtos = await _service.getAllProjects();
     final List<int> favoriteIds = []; 
     
+    
+   
+
     final List<Project> projects = [];
     for (var dto in projectDtos) {
       if (dto.status == 'PUBLISHED') {
@@ -63,4 +66,13 @@ class ProjectRepositoryImpl implements ProjectRepository {
 
     return favoriteProjects;
   }
+  @override
+  Future<Project> getProjectById(int projectId) async {
+    final dto = await _service.getProjectById(projectId);
+  
+    final isFav = await _dao.isFavorite(projectId);
+  
+    return dto.toEntity(isFavorite: isFav);
+}
+
 }

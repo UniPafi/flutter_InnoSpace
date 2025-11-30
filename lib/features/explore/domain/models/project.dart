@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter_innospace/features/explore/domain/models/student_profile.dart';
 
 class Project extends Equatable {
   final int id;
@@ -9,7 +10,9 @@ class Project extends Equatable {
   final String category;
   final String status;
   final bool isFavorite; 
+  final StudentProfile? studentProfile;
 
+  
   const Project({
     required this.id,
     required this.studentId,
@@ -19,6 +22,7 @@ class Project extends Equatable {
     required this.category,
     required this.status,
     this.isFavorite = false, 
+    this.studentProfile,
   });
 
   Project copyWith({
@@ -30,6 +34,7 @@ class Project extends Equatable {
     String? category,
     String? status,
     bool? isFavorite,
+    StudentProfile? studentProfile,
   }) {
     return Project(
       id: id ?? this.id,
@@ -40,6 +45,7 @@ class Project extends Equatable {
       category: category ?? this.category,
       status: status ?? this.status,
       isFavorite: isFavorite ?? this.isFavorite,
+      studentProfile: studentProfile ?? this.studentProfile,
     );
   }
 
@@ -53,5 +59,6 @@ class Project extends Equatable {
         category,
         status,
         isFavorite,
+        studentProfile ?? '',
       ];
 }

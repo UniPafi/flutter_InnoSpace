@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_innospace/features/explore/domain/models/project.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/get_project_detail_use_case.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/get_student_profile_use_case.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/send_collaboration_request_use_case.dart';
 import 'package:flutter_innospace/features/explore/presentation/blocs/explore_projects/explore_projects_bloc.dart';
 import 'package:flutter_innospace/features/explore/presentation/blocs/explore_projects/explore_projects_event.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_innospace/features/explore/presentation/blocs/project_detail/project_detail_bloc.dart';
+import 'package:flutter_innospace/features/explore/presentation/pages/project_detail_page.dart';
+
 
 class ProjectCard extends StatelessWidget {
   final Project project;
@@ -17,10 +23,28 @@ class ProjectCard extends StatelessWidget {
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+child: InkWell( 
+        onTap: () {
+          
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => BlocProvider<ProjectDetailBloc>(
+                
+                create: (context) => ProjectDetailBloc(
+                  context.read<GetProjectDetailUseCase>(),
+                  context.read<GetStudentProfileUseCase>(),
+                  context.read<SendCollaborationRequestUseCase>(),
+                ),
+               
+                child: ProjectDetailPage(projectId: project.id),
+              ),
+            ),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Título
             Text(
@@ -77,6 +101,7 @@ class ProjectCard extends StatelessWidget {
               ),
             ),
           ],
+          ),
         ),
       ),
     );

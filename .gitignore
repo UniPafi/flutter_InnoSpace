@@ -42,8 +42,10 @@ ios/Flutter/flutter_export_environment.sh
 .buildlog/
 .history
 .DS_Store
-
-
+.idea/
+*.iml
+*.iws
+*.ipr
 
 # Flutter repo-specific
 /bin/cache/

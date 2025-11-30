@@ -4,12 +4,22 @@ import 'package:flutter_innospace/core/ui/theme.dart';
 import 'package:flutter_innospace/features/auth/domain/usecases/SignInUseCase.dart';
 import 'package:flutter_innospace/features/auth/domain/usecases/SignUpUseCase.dart';
 import 'package:flutter_innospace/features/explore/data/dao/favorite_dao.dart';
+import 'package:flutter_innospace/features/explore/data/repositories/collaboration_repository_impl.dart';
 import 'package:flutter_innospace/features/explore/data/repositories/project_repository_impl.dart';
+import 'package:flutter_innospace/features/explore/data/repositories/student_profile_repository_impl.dart';
+import 'package:flutter_innospace/features/explore/data/services/collaboration_service.dart';
 import 'package:flutter_innospace/features/explore/data/services/project_service.dart';
+import 'package:flutter_innospace/features/explore/data/services/student_profile_service.dart';
+import 'package:flutter_innospace/features/explore/domain/repositories/collaboration_repository.dart';
 import 'package:flutter_innospace/features/explore/domain/repositories/project_repository.dart';
+import 'package:flutter_innospace/features/explore/domain/repositories/student_profile_repository.dart';
 import 'package:flutter_innospace/features/explore/domain/use_cases/get_explore_projects_use_case.dart';
 import 'package:flutter_innospace/features/explore/domain/use_cases/get_favorite_projects_use_case.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/get_project_detail_use_case.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/get_student_profile_use_case.dart';
+import 'package:flutter_innospace/features/explore/domain/use_cases/send_collaboration_request_use_case.dart';
 import 'package:flutter_innospace/features/explore/domain/use_cases/toggle_favorite_project_use_case.dart';
+import 'package:flutter_innospace/features/explore/presentation/blocs/project_detail/project_detail_bloc.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/close_opportunity_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/create_opportunity_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/delete_opportunity_use_case.dart';
@@ -18,6 +28,11 @@ import 'package:flutter_innospace/features/opportunities/domain/use-cases/publis
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/get_my_opportunities_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/presentation/blocs/opportunity_detail/opportunity_detail_bloc.dart';
 import 'package:flutter_innospace/features/opportunities/presentation/blocs/opportunity_list/opportunity_list_bloc.dart';
+import 'package:flutter_innospace/features/postulations/data/repositories/postulations_repository_impl.dart';
+import 'package:flutter_innospace/features/postulations/data/services/postulations_service.dart';
+import 'package:flutter_innospace/features/postulations/domain/repositories/postulations_repository.dart';
+import 'package:flutter_innospace/features/postulations/domain/uses-cases/get_postulations.dart';
+import 'package:flutter_innospace/features/postulations/presentation/blocs/postulations_bloc.dart';
 import 'core/services/session_manager.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/data/services/auth_service.dart';
@@ -37,6 +52,10 @@ import 'features/profile/domain/repositories/profile_repository.dart';
 import 'features/profile/domain/use_cases/get_manager_profile_use_case.dart';
 import 'features/profile/domain/use_cases/update_manager_profile_use_case.dart';
 import "features/profile/presentation/blocs/profile/profile_bloc.dart";
+import 'features/opportunities/domain/use-cases/get_student_applications_use_case.dart';
+import 'features/opportunities/domain/use-cases/accept_student_application_use_case.dart';
+import 'features/opportunities/domain/use-cases/reject_student_application_use_case.dart';
+
 
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -102,6 +121,31 @@ class MyApp extends StatelessWidget {
               ProfileRepositoryImpl(profileService, sessionManager),
         ),
         
+        ProxyProvider2<http.Client, SessionManager, StudentProfileService>(
+           update: (_, client, sessionManager, __) => StudentProfileService(client, sessionManager),
+        ),
+        ProxyProvider<StudentProfileService, StudentProfileRepository>(
+          update: (_, service, __) => StudentProfileRepositoryImpl(service),
+        ),
+ProxyProvider2<http.Client, SessionManager, CollaborationService>(
+  update: (_, client, sessionManager, __) => CollaborationService(client, sessionManager),
+),
+
+
+ProxyProvider<CollaborationService, CollaborationRepository>(
+  update: (_, service, __) => CollaborationRepositoryImpl(service),
+),
+
+
+Provider<SendCollaborationRequestUseCase>(
+  create: (context) => SendCollaborationRequestUseCase(context.read<CollaborationRepository>()),
+),
+
+
+//colocar aca los UseCases si es q los usan
+
+
+//USECASES DE FEATURE AUTH
         Provider<SignInUseCase>(
         create: (context) => SignInUseCase(context.read<AuthRepository>()),
           ),
@@ -112,6 +156,7 @@ class MyApp extends StatelessWidget {
           create: (context) => SignOutUseCase(context.read<AuthRepository>()),
           ),
 
+//USECASES DE FEATURE MY OPPORTUNITIES
         Provider<CreateOpportunityUseCase>(
            create: (context) => CreateOpportunityUseCase(
             context.read<OpportunityRepository>(),
@@ -143,7 +188,7 @@ Provider<DeleteOpportunityUseCase>(
     DeleteOpportunityUseCase(context.read<OpportunityRepository>()),
 ),
 
-
+//USECASES DE FEATURE EXPLORE
 Provider<GetExploreProjectsUseCase>(
   create: (context) => 
   GetExploreProjectsUseCase(context.read<ProjectRepository>()),
@@ -164,12 +209,55 @@ Provider<GetManagerProfileUseCase>(
 Provider<UpdateManagerProfileUseCase>(
   create: (context) =>
   UpdateManagerProfileUseCase(context.read<ProfileRepository>()),
+Provider<GetStudentProfileUseCase>(
+  create: (context) => GetStudentProfileUseCase(context.read<StudentProfileRepository>()),
+),
+
+
+Provider<GetProjectDetailUseCase>(
+  create: (context) => GetProjectDetailUseCase(context.read<ProjectRepository>()),
+),
+
+
+Provider<GetStudentApplicationsUseCase>(
+    create: (context) => GetStudentApplicationsUseCase(context.read<OpportunityRepository>()),
+),
+
+Provider<AcceptStudentApplicationUseCase>(
+    create: (context) => AcceptStudentApplicationUseCase(context.read<OpportunityRepository>()),
+),
+
+Provider<RejectStudentApplicationUseCase>(
+    create: (context) => RejectStudentApplicationUseCase(context.read<OpportunityRepository>()),
+),
+
+//USECASES DE POSTULATIONS
+
+ProxyProvider2<http.Client, SessionManager, PostulationsService>(
+  update: (_, client, sessionManager, __) => PostulationsService(client, sessionManager),
+),
+
+ProxyProvider<PostulationsService, PostulationsRepository>(
+  update: (_, service, __) => PostulationsRepositoryImpl(service),
+),
+
+Provider<GetPostulationsUseCase>(
+  create: (context) =>
+      GetPostulationsUseCase(context.read<PostulationsRepository>()),
 ),
 
 BlocProvider<OpportunityListBloc>(
     create: (context) => OpportunityListBloc(
         context.read<GetMyOpportunitiesUseCase>(),
     ),
+),
+
+BlocProvider<ProjectDetailBloc>(
+  create: (context) => ProjectDetailBloc(
+    context.read<GetProjectDetailUseCase>(), 
+    context.read<GetStudentProfileUseCase>(), 
+    context.read<SendCollaborationRequestUseCase>(),
+  ),
 ),
 
 BlocProvider<OpportunityDetailBloc>(
