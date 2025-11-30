@@ -28,6 +28,11 @@ import 'package:flutter_innospace/features/opportunities/domain/use-cases/publis
 import 'package:flutter_innospace/features/opportunities/domain/use-cases/get_my_opportunities_use_case.dart';
 import 'package:flutter_innospace/features/opportunities/presentation/blocs/opportunity_detail/opportunity_detail_bloc.dart';
 import 'package:flutter_innospace/features/opportunities/presentation/blocs/opportunity_list/opportunity_list_bloc.dart';
+import 'package:flutter_innospace/features/postulations/data/repositories/postulations_repository_impl.dart';
+import 'package:flutter_innospace/features/postulations/data/services/postulations_service.dart';
+import 'package:flutter_innospace/features/postulations/domain/repositories/postulations_repository.dart';
+import 'package:flutter_innospace/features/postulations/domain/uses-cases/get_postulations.dart';
+import 'package:flutter_innospace/features/postulations/presentation/blocs/postulations_bloc.dart';
 import 'core/services/session_manager.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/data/services/auth_service.dart';
@@ -198,6 +203,20 @@ Provider<RejectStudentApplicationUseCase>(
     create: (context) => RejectStudentApplicationUseCase(context.read<OpportunityRepository>()),
 ),
 
+//USECASES DE POSTULATIONS
+
+ProxyProvider2<http.Client, SessionManager, PostulationsService>(
+  update: (_, client, sessionManager, __) => PostulationsService(client, sessionManager),
+),
+
+ProxyProvider<PostulationsService, PostulationsRepository>(
+  update: (_, service, __) => PostulationsRepositoryImpl(service),
+),
+
+Provider<GetPostulationsUseCase>(
+  create: (context) =>
+      GetPostulationsUseCase(context.read<PostulationsRepository>()),
+),
 
 BlocProvider<OpportunityListBloc>(
     create: (context) => OpportunityListBloc(
