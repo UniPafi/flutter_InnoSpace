@@ -32,7 +32,6 @@ import 'package:flutter_innospace/features/postulations/data/repositories/postul
 import 'package:flutter_innospace/features/postulations/data/services/postulations_service.dart';
 import 'package:flutter_innospace/features/postulations/domain/repositories/postulations_repository.dart';
 import 'package:flutter_innospace/features/postulations/domain/uses-cases/get_postulations.dart';
-import 'package:flutter_innospace/features/postulations/presentation/blocs/postulations_bloc.dart';
 import 'core/services/session_manager.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/data/services/auth_service.dart';

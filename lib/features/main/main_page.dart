@@ -13,6 +13,10 @@ import 'package:flutter_innospace/features/postulations/domain/uses-cases/get_po
 import 'package:flutter_innospace/features/postulations/presentation/blocs/postulations_bloc.dart';
 import 'package:flutter_innospace/features/postulations/presentation/blocs/postulations_event.dart';
 import 'package:flutter_innospace/features/postulations/presentation/pages/postulations_page.dart';
+import 'package:flutter_innospace/features/profile/domain/use_cases/get_manager_profile_use_case.dart';
+import 'package:flutter_innospace/features/profile/domain/use_cases/update_manager_profile_use_case.dart';
+import 'package:flutter_innospace/features/profile/presentation/blocs/profile/profile_bloc.dart';
+import 'package:flutter_innospace/features/profile/presentation/pages/profile_page.dart';
 import '../auth/domain/repositories/auth_repository.dart';
 import 'package:flutter_innospace/features/opportunities/presentation/blocs/opportunity_list/opportunity_list_bloc.dart';
 import 'package:flutter_innospace/features/opportunities/presentation/pages/opportunities_page.dart';
@@ -65,42 +69,6 @@ class RequestsPage extends StatelessWidget {
   }
 }
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mi Perfil'),
-        automaticallyImplyLeading: false,
-      ),
-      body: Center(
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.redAccent,
-            foregroundColor: Colors.white,
-          ),
-          child: const Text('Cerrar Sesión'),
-          onPressed: () async {
-            final authRepo = context.read<AuthRepository>();
-            final loginBloc = context.read<LoginBloc>();
-
-            await authRepo.signOut();
-
-            loginBloc.add(LoginReset());
-
-            if (context.mounted) {
-              Navigator.of(
-                context,
-              ).pushNamedAndRemoveUntil('/', (route) => false);
-            }
-          },
-        ),
-      ),
-    );
-  }
-}
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -127,10 +95,15 @@ class _MainPageState extends State<MainPage> {
           OpportunityListBloc(context.read<GetMyOpportunitiesUseCase>()),
       child: const OpportunitiesPage(),
     ),
-    const RequestsPage(),
-    const ProfilePage(),
+    const RequestsPage(),BlocProvider<ProfileBloc>(
+      create: (context) => ProfileBloc(
+        context.read<GetManagerProfileUseCase>(), // Asumo que el BLoC necesita este Use Case
+        context.read<UpdateManagerProfileUseCase>(), // Asumo que el BLoC necesita este Use Case
+      ),
+      child: const ProfilePage(), // ⬅️ Ahora usa la versión StatefulWidget importada
+    ),
   ];
-
+  
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
