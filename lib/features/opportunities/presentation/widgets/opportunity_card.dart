@@ -13,78 +13,115 @@ class OpportunityCard extends StatelessWidget {
   });
 
   Color _getStatusColor(OpportunityStatus status) {
-    switch (status) {
-      case OpportunityStatus.PUBLISHED:
-        return Colors.green;
-      case OpportunityStatus.CLOSED:
-        return Colors.red;
-      case OpportunityStatus.DRAFT:
-      default:
-        return Colors.orange;
-    }
+    if (status == OpportunityStatus.PUBLISHED) return const Color(0xFF66BB6A); // Green
+    return const Color(0xFFFFB74D); // Orange/Amber for draft
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    final bool isPublished = opportunity.status == OpportunityStatus.PUBLISHED;
+    final String statusText = isPublished ? "Publicado" : "Borrador";
+    final Color statusColor = _getStatusColor(opportunity.status);
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: IntrinsicHeight(
+          child: Row(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Título
-                  Expanded(
-                    child: Text(
-                      opportunity.title,
-                      style: Theme.of(context).textTheme.titleLarge,
+              // Left Color Strip
+              Container(
+                width: 5,
+                color: statusColor,
+              ),
+              Expanded(
+                child: InkWell(
+                  onTap: onTap,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                opportunity.title,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            // Status Pill
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: statusColor),
+                              ),
+                              child: Text(
+                                statusText,
+                                style: TextStyle(
+                                  color: statusColor,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        
+                        // Summary (all caps "RESUMEN" look from image)
+                        Text(
+                          opportunity.summary.isNotEmpty ? opportunity.summary : "SIN RESUMEN",
+                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        
+                        const SizedBox(height: 10),
+                        
+                        // Category with Icon
+                        Row(
+                          children: [
+                            if (opportunity.category == "IT" || opportunity.category == "App Movil")
+                              Icon(
+                                opportunity.category == "App Movil" ? Icons.category : Icons.computer,
+                                size: 14, 
+                                color: const Color(0xFF42A5F5)
+                              )
+                            else
+                              const Icon(Icons.category, size: 14, color: Color(0xFF42A5F5)),
+                            
+                            const SizedBox(width: 5),
+                            Text(
+                              opportunity.category,
+                              style: const TextStyle(color: Color(0xFF42A5F5), fontSize: 12, fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Chip(
-                    label: Text(opportunity.status.name),
-                    backgroundColor: _getStatusColor(opportunity.status),
-                    labelStyle: const TextStyle(color: Colors.white, fontSize: 10),
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-
-              Chip(
-                label: Text(
-                  opportunity.category.isNotEmpty 
-                    ? opportunity.category 
-                    : "Sin Categoría",
                 ),
-                backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-                labelStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  fontSize: 12
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-              ),
-              const SizedBox(height: 12),
-
-             
-              Text(
-                opportunity.summary.isNotEmpty
-                  ? opportunity.summary
-                  : "Esta convocatoria no tiene un resumen.",
-                style: opportunity.summary.isNotEmpty
-                  ? Theme.of(context).textTheme.bodyMedium
-                  : Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontStyle: FontStyle.italic,
-                        color: Colors.grey[600]
-                      ),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),

@@ -12,45 +12,37 @@ class ExplorePage extends StatefulWidget {
   State<ExplorePage> createState() => _ExplorePageState();
 }
 
-class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStateMixin {
+class _ExplorePageState extends State<ExplorePage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  
-  final List<Tab> _tabs = const [
-    Tab(text: 'Explorar', icon: Icon(Icons.public)),
-    Tab(text: 'Favoritos', icon: Icon(Icons.favorite)),
-  ];
+
+  final List<String> _tabs = ['Convocatorias', 'Favoritos'];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
 
-    // 1. Cargar la vista inicial (Explorar, índice 0)
     _tabController.addListener(_handleTabSelection);
-    
-    // Despachar la carga inicial después de que el widget se haya construido
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Forzar la carga de la primera pestaña
-      _fetchDataForCurrentTab(0); 
+      _fetchDataForCurrentTab(0);
     });
   }
 
   void _handleTabSelection() {
-    // Solo despachar si la pestaña realmente cambió (y no está en transición)
-    if (!_tabController.indexIsChanging) { 
+    if (!_tabController.indexIsChanging) {
       _fetchDataForCurrentTab(_tabController.index);
     }
+    // Para redibujar el selector de tabs cuando cambia
+    setState(() {});
   }
 
   void _fetchDataForCurrentTab(int index) {
-    // El BLoC ya está disponible en el árbol gracias a MainPage.dart
     final bloc = context.read<ExploreBloc>();
-    
     if (index == 0) {
-      // Pestaña "Explorar" (isFavoriteView: false)
       bloc.add(const FetchProjects(isFavoriteView: false));
     } else {
-      // Pestaña "Favoritos" (isFavoriteView: true)
       bloc.add(const FetchProjects(isFavoriteView: true));
     }
   }
@@ -64,29 +56,100 @@ class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    // Usamos el color primario del tema para el AppBar
+    // Definición de colores del diseño (Basado en las imágenes)
+    const Color primaryPurple = Color(0xFF8E6CEF); // Tono morado claro de la imagen
+    const Color darkPurple = Color(0xFF673AB7);
+    const Color lightGrayBg = Color(0xFFF0F0F5);
+
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        title: const Text('Proyectos'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: _tabs,
-          // Ajustes de color para la TabBar
-          labelColor: Theme.of(context).colorScheme.onPrimary,
-          unselectedLabelColor: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),
-          indicatorColor: Theme.of(context).colorScheme.secondary, // Celeste
+      backgroundColor: primaryPurple, // Fondo superior morado
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            // --- Encabezado Personalizado ---
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Explorar',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Barra de Búsqueda
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Buscar',
+                      hintStyle: TextStyle(color: Colors.grey[500]),
+                      prefixIcon: Icon(Icons.search, color: darkPurple),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // Selector de Tabs estilo "Cápsula"
+                  Container(
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: TabBar(
+                      controller: _tabController,
+                      indicator: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      labelColor: darkPurple,
+                      unselectedLabelColor: Colors.white,
+                      labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      dividerColor: Colors.transparent, // Quitar línea divisoria
+                      tabs: _tabs.map((tabName) => Tab(text: tabName)).toList(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // --- Cuerpo con esquinas redondeadas superiores ---
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: lightGrayBg,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: const [
+                      ExploreProjectList(isFavoriteView: false),
+                      ExploreProjectList(isFavoriteView: true),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: const [
-          // Vista 1: Explorar
-          ExploreProjectList(isFavoriteView: false),
-          
-          // Vista 2: Favoritos
-          ExploreProjectList(isFavoriteView: true),
-        ],
       ),
     );
   }

@@ -1,5 +1,6 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'dart:ui' show Color;
 
 class AppTheme {
   static const Color primaryColor = Color(0xFF673AB7); 
@@ -8,10 +9,9 @@ class AppTheme {
   static const Color darkBackground = Color(0xFF121212);  
 
   // ==========================================================
-  //  Tema Claro 
+  //  Tema Claro
   // ==========================================================
-static ThemeData get lightTheme => ThemeData(
-      
+  static ThemeData get lightTheme => ThemeData(
         brightness: Brightness.light, 
         primaryColor: primaryColor,
         colorScheme: ColorScheme.fromSeed(
@@ -19,23 +19,43 @@ static ThemeData get lightTheme => ThemeData(
           brightness: Brightness.light, 
           primary: primaryColor,
           secondary: accentColor,
-          surface: lightBackground,
+          background: lightBackground,
+          surface: Colors.white,
           onPrimary: Colors.white,
           onSecondary: Colors.black,
           onSurface: Colors.black87,
         ),
         
+        // Fondo gris claro para las páginas
         scaffoldBackgroundColor: lightBackground,
+        
+        // Configuración del Encabezado (Morado con bordes redondeados)
         appBarTheme: const AppBarTheme(
           backgroundColor: primaryColor,
           foregroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
+          // Aquí definimos la forma rectangular con bordes redondeados abajo
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(20),
+            ),
+          ),
         ),
+        
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: accentColor,
           foregroundColor: Colors.white,
         ),
+        
+        // Configuración por defecto de la barra de navegación
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Colors.white,
+          selectedItemColor: primaryColor,
+          unselectedItemColor: Colors.grey,
+          elevation: 10,
+        ),
+
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: primaryColor,
@@ -51,7 +71,6 @@ static ThemeData get lightTheme => ThemeData(
   // ==========================================================
 
   static ThemeData get darkTheme => ThemeData(
-        
         brightness: Brightness.dark,
         primaryColor: primaryColor,
         colorScheme: ColorScheme.fromSeed(
@@ -64,7 +83,7 @@ static ThemeData get lightTheme => ThemeData(
           onPrimary: Colors.white,
           onSecondary: Colors.black,
           onBackground: Colors.white70,
-          onSurface: Colors.white70,
+          onSurface: Colors.white,
         ),
         
         scaffoldBackgroundColor: darkBackground,

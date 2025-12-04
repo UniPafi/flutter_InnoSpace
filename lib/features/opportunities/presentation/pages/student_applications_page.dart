@@ -14,22 +14,39 @@ class StudentApplicationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const Color headerColor = Color(0xFF7E57C2);
+    const Color backgroundColor = Color(0xFFEDE7F6);
+
     return BlocProvider(
       create: (context) => StudentApplicationsBloc(
         context.read<GetStudentApplicationsUseCase>(),
-        context.read<AcceptStudentApplicationUseCase>(), // Inyección
-        context.read<RejectStudentApplicationUseCase>(), // Inyección
+        context.read<AcceptStudentApplicationUseCase>(),
+        context.read<RejectStudentApplicationUseCase>(),
       )..add(FetchStudentApplications(opportunityId)),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Postulantes')),
+        backgroundColor: backgroundColor,
+        appBar: AppBar(
+          title: const Text(
+            'Postulantes',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          backgroundColor: headerColor,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(30),
+            ),
+          ),
+        ),
         body: BlocBuilder<StudentApplicationsBloc, StudentApplicationsState>(
           builder: (context, state) {
-            // ... casos de loading y error iguales ...
             if (state.status == Status.loading) {
-               return const Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
             if (state.status == Status.error) {
-               return Center(child: Text('Error: ${state.errorMessage}'));
+              return Center(child: Text('Error: ${state.errorMessage}'));
             }
 
             if (state.status == Status.success) {
@@ -37,6 +54,7 @@ class StudentApplicationsPage extends StatelessWidget {
                 return const Center(child: Text('No hay postulantes aún.'));
               }
               return ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 20),
                 itemCount: state.applications.length,
                 itemBuilder: (context, index) {
                   final app = state.applications[index];
@@ -44,19 +62,19 @@ class StudentApplicationsPage extends StatelessWidget {
                     application: app,
                     onAccept: () {
                       context.read<StudentApplicationsBloc>().add(
-                        AcceptApplication(
-                          applicationId: app.id,
-                          opportunityId: opportunityId,
-                        ),
-                      );
+                            AcceptApplication(
+                              applicationId: app.id,
+                              opportunityId: opportunityId,
+                            ),
+                          );
                     },
                     onReject: () {
                       context.read<StudentApplicationsBloc>().add(
-                        RejectApplication(
-                          applicationId: app.id,
-                          opportunityId: opportunityId,
-                        ),
-                      );
+                            RejectApplication(
+                              applicationId: app.id,
+                              opportunityId: opportunityId,
+                            ),
+                          );
                     },
                   );
                 },

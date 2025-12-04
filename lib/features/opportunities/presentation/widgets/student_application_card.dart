@@ -17,41 +17,42 @@ class StudentApplicationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    const Color primaryPurple = Color(0xFF673AB7);
     
-    // Lógica de estado
     final isPending = application.managerResponse.toUpperCase() == 'PENDIENTE' || 
                       application.managerResponse.toUpperCase() == 'PENDING' ||
                       application.managerResponse.isEmpty;
 
-    // Lógica de imagen
     Uint8List? decodedImage;
     if (application.studentPhotoUrl.isNotEmpty) {
       decodedImage = decodeBase64Image(application.studentPhotoUrl);
     }
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // --- Cabecera: Foto, Nombre y Estado ---
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
-                  backgroundImage: (decodedImage != null)
-                      ? MemoryImage(decodedImage)
-                      : null,
-                  child: (decodedImage == null)
-                      ? Icon(Icons.person, size: 30, color: theme.colorScheme.primary)
-                      : null,
+                  backgroundImage: decodedImage != null ? MemoryImage(decodedImage) : null,
+                  backgroundColor: Colors.grey[200],
+                  child: decodedImage == null ? const Icon(Icons.person, color: Colors.grey) : null,
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -60,130 +61,104 @@ class StudentApplicationCard extends StatelessWidget {
                     children: [
                       Text(
                         application.studentName,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
+                      if (application.studentPhoneNumber.isNotEmpty) ...[
+                         const SizedBox(height: 2),
+                         Row(
+                           children: [
+                             const Icon(Icons.phone, size: 12, color: Colors.grey),
+                             const SizedBox(width: 4),
+                             Text(application.studentPhoneNumber, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                           ],
+                         )
+                      ],
                       const SizedBox(height: 4),
-                      // Teléfono
-                      if (application.studentPhoneNumber.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 4),
-                          child: Row(
-                            children: [
-                              Icon(Icons.phone, size: 14, color: Colors.grey[600]),
-                              const SizedBox(width: 4),
-                              Text(
-                                application.studentPhoneNumber,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: Colors.grey[700],
-                                ),
-                              ),
-                            ],
+                      // Status Label if not pending
+                      if (!isPending)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey[300]!),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            application.managerResponse,
+                            style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold),
                           ),
                         ),
-                      
-                      // Chip de Estado
-                      Container(
-                        margin: const EdgeInsets.only(top: 4),
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: isPending ? Colors.orange[50] : Colors.grey[100],
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                            color: isPending ? Colors.orange.withOpacity(0.3) : Colors.grey.withOpacity(0.3),
-                          ),
-                        ),
-                        child: Text(
-                          application.managerResponse.isNotEmpty ? application.managerResponse : 'Pendiente',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: isPending ? Colors.orange[800] : Colors.grey[700],
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
               ],
             ),
+            const SizedBox(height: 16),
+            const Divider(height: 1),
+            const SizedBox(height: 16),
             
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 12),
-              child: Divider(),
+            // Profile & Skills sections
+            const Text("Perfil:", style: TextStyle(color: primaryPurple, fontWeight: FontWeight.bold, fontSize: 13)),
+            const SizedBox(height: 4),
+            Text(
+              application.studentDescription,
+              style: const TextStyle(fontSize: 14, color: Colors.black87),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
             ),
-
-            // --- Descripción del Perfil ---
-            if (application.studentDescription.isNotEmpty) ...[
-              Text(
-                "Perfil:",
-                style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                application.studentDescription,
-                style: theme.textTheme.bodyMedium,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 12),
-            ],
-
-            // --- Skills ---
+            const SizedBox(height: 12),
+            
             if (application.studentSkills.isNotEmpty) ...[
-              Text(
-                "Habilidades:",
-                style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
-              ),
+              const Text("Habilidades:", style: TextStyle(color: primaryPurple, fontWeight: FontWeight.bold, fontSize: 13)),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
-                runSpacing: 4,
-                children: application.studentSkills.map((skill) {
-                  return Chip(
-                    label: Text(skill),
-                    labelStyle: const TextStyle(fontSize: 11),
-                    visualDensity: VisualDensity.compact,
-                    padding: EdgeInsets.zero,
-                    backgroundColor: theme.colorScheme.surface,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(color: theme.colorScheme.outline.withOpacity(0.2)),
-                    ),
-                  );
-                }).toList(),
+                runSpacing: 8,
+                children: application.studentSkills.map((skill) => Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEDE7F6),
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: primaryPurple.withOpacity(0.2)),
+                  ),
+                  child: Text(
+                    skill,
+                    style: TextStyle(color: primaryPurple.withOpacity(0.8), fontSize: 12),
+                  ),
+                )).toList(),
               ),
-              const SizedBox(height: 16),
             ],
-
-            // --- Botones de Acción (Solo si está pendiente) ---
-            if (isPending) 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+            
+            // Buttons if pending
+             if (isPending) ...[
+               const SizedBox(height: 20),
+               Row(
                 children: [
-                  OutlinedButton.icon(
-                    onPressed: onReject,
-                    icon: const Icon(Icons.close, size: 18),
-                    label: const Text('Rechazar'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red,
-                      side: const BorderSide(color: Colors.red),
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: onReject,
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.red,
+                        side: const BorderSide(color: Colors.red),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      ),
+                      child: const Text("Rechazar"),
                     ),
                   ),
                   const SizedBox(width: 12),
-                  ElevatedButton.icon(
-                    onPressed: onAccept,
-                    icon: const Icon(Icons.check, size: 18),
-                    label: const Text('Aceptar'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: onAccept,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryPurple,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      ),
+                      child: const Text("Aceptar"),
                     ),
                   ),
                 ],
-              ),
+               ),
+             ],
           ],
         ),
       ),
