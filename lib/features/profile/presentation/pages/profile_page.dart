@@ -33,14 +33,28 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    // Definición de colores del diseño
+    const Color primaryPurple = Color(0xFF673AB7);
+    const Color lightGrayBg = Color(0xFFF5F5F5);
+
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: lightGrayBg, // 1. Fondo gris claro
       appBar: AppBar(
-        title: const Text('Mi Perfil'),
+        title: const Text(
+          'Mi Perfil',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         automaticallyImplyLeading: false,
-        elevation: 0,
-        backgroundColor: Theme.of(context).primaryColor,
+        centerTitle: true,
+        elevation: 4,
+        // 2. Encabezado Morado con bordes redondeados
+        backgroundColor: primaryPurple,
         foregroundColor: Colors.white,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(20),
+          ),
+        ),
       ),
       body: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
@@ -70,6 +84,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: _loadProfile,
                     icon: const Icon(Icons.refresh),
                     label: const Text('Reintentar'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryPurple,
+                      foregroundColor: Colors.white,
+                    ),
                   ),
                 ],
               ),
@@ -92,22 +110,11 @@ class _ProfilePageState extends State<ProfilePage> {
               physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
-                  // Header con gradiente
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Theme.of(context).primaryColor,
-                          Theme.of(context).primaryColor.withOpacity(0.8),
-                        ],
-                      ),
-                    ),
+                  const SizedBox(height: 24),
+                  // --- Sección de Cabecera del Perfil ---
+                  Center(
                     child: Column(
                       children: [
-                        const SizedBox(height: 24),
                         // Avatar con borde
                         Container(
                           decoration: BoxDecoration(
@@ -115,7 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             border: Border.all(color: Colors.white, width: 4),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
+                                color: Colors.black.withOpacity(0.1),
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),
                               ),
@@ -124,14 +131,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: CircleAvatar(
                             radius: 60,
                             backgroundColor: Colors.grey[200],
-                            backgroundImage:
-                                _getImageProvider(profile.photoUrl),
+                            backgroundImage: _getImageProvider(profile.photoUrl),
                             child: profile.photoUrl == null ||
                                     profile.photoUrl!.isEmpty
-                                ? Icon(
+                                ? const Icon(
                                     Icons.person,
                                     size: 60,
-                                    color: Colors.grey[400],
+                                    color: Colors.grey,
                                   )
                                 : null,
                           ),
@@ -140,41 +146,43 @@ class _ProfilePageState extends State<ProfilePage> {
                         // Nombre
                         Text(
                           profile.name,
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87, // Texto oscuro sobre fondo claro
+                              ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 8),
-                        // Rol
+                        // Rol (Chip estilizado)
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: primaryPurple.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                                color: primaryPurple.withOpacity(0.2)),
                           ),
                           child: const Text(
                             'Manager',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: primaryPurple,
                               fontSize: 14,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 24),
                       ],
                     ),
                   ),
 
-                  // Contenido
+                  const SizedBox(height: 24),
+
+                  // --- Contenido de Información ---
                   Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -189,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 icon: Icons.email_rounded,
                                 title: 'Email',
                                 value: userEmail,
-                                iconColor: Colors.red,
+                                iconColor: Colors.redAccent,
                               );
                             }
                             return const SizedBox.shrink();
@@ -277,12 +285,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                     Container(
                                       padding: const EdgeInsets.all(8),
                                       decoration: BoxDecoration(
-                                        color: Colors.indigo.withOpacity(0.1),
+                                        color: primaryPurple.withOpacity(0.1),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: const Icon(
                                         Icons.code_rounded,
-                                        color: Colors.indigo,
+                                        color: primaryPurple,
                                         size: 20,
                                       ),
                                     ),
@@ -309,16 +317,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                         vertical: 6,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: Colors.indigo.withOpacity(0.1),
+                                        color: primaryPurple.withOpacity(0.05),
                                         borderRadius: BorderRadius.circular(20),
                                         border: Border.all(
-                                          color: Colors.indigo.withOpacity(0.3),
+                                          color: primaryPurple.withOpacity(0.2),
                                         ),
                                       ),
                                       child: Text(
                                         tech,
                                         style: const TextStyle(
-                                          color: Colors.indigo,
+                                          color: primaryPurple,
                                           fontSize: 13,
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -352,7 +360,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             label: const Text('Editar Perfil'),
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 16),
-                              backgroundColor: Theme.of(context).primaryColor,
+                              backgroundColor: primaryPurple,
                               foregroundColor: Colors.white,
                               elevation: 2,
                               shape: RoundedRectangleBorder(
@@ -423,7 +431,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
 
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 32), // Espacio final
                       ],
                     ),
                   ),
@@ -467,7 +475,7 @@ class _ProfilePageState extends State<ProfilePage> {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white, // Tarjeta blanca
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(

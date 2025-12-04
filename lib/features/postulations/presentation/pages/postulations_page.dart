@@ -11,8 +11,28 @@ class PostulationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Definición de colores del diseño
+    const Color primaryPurple = Color(0xFF673AB7);
+    const Color lightGrayBg = Color(0xFFF5F5F5);
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Mis Postulaciones")),
+      backgroundColor: lightGrayBg, // 1. Fondo gris claro
+      appBar: AppBar(
+        title: const Text(
+          "Mis Postulaciones",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        // 2. Encabezado Morado con texto blanco y bordes redondeados
+        backgroundColor: primaryPurple,
+        foregroundColor: Colors.white,
+        elevation: 4,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(20),
+          ),
+        ),
+      ),
       body: BlocBuilder<PostulationsBloc, PostulationsState>(
         builder: (context, state) {
           if (state is PostulationsLoading) {
@@ -25,7 +45,8 @@ class PostulationsPage extends StatelessWidget {
             }
 
             return ListView.builder(
-              padding: const EdgeInsets.all(16),
+              // Ajustamos el padding vertical para que no choque con el AppBar redondeado
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               itemCount: state.postulations.length,
               itemBuilder: (_, index) {
                 return PostulationCardWidget(

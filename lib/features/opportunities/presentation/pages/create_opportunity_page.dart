@@ -9,13 +9,32 @@ class CreateOpportunityPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Colors from your images
+    const Color headerPurple = Color(0xFF7E57C2);
+    const Color backgroundLavender = Color(0xFFEDE7F6); 
+    const Color buttonPurple = Color(0xFF673AB7);
+
     return BlocProvider<CreateOpportunityBloc>(
       create: (context) => CreateOpportunityBloc(
         context.read<CreateOpportunityUseCase>(),
       ),
       child: Scaffold(
+        backgroundColor: backgroundLavender,
         appBar: AppBar(
-          title: const Text('Crear Nueva Convocatoria'),
+          title: const Text(
+            'Crear Nueva Convocatoria',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          centerTitle: true,
+          backgroundColor: headerPurple,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(30),
+            ),
+          ),
+          toolbarHeight: 70,
         ),
         body: BlocConsumer<CreateOpportunityBloc, CreateOpportunityState>(
           listener: (context, state) {
@@ -23,13 +42,14 @@ class CreateOpportunityPage extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                   title: const Text('Éxito'),
                   content: const Text('La convocatoria se ha creado como borrador.'),
                   actions: [
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop(); 
-                        Navigator.of(context).pop(true); 
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop(true);
                       },
                       child: const Text('OK'),
                     ),
@@ -47,45 +67,115 @@ class CreateOpportunityPage extends StatelessWidget {
             }
           },
           builder: (context, state) {
+            
+            // Custom Input Builder matching image_361fa2.png
+            Widget buildCustomInput({
+              required String label, 
+              required String hint, 
+              int maxLines = 1,
+              required Function(String) onChanged,
+              bool isRequirement = false
+            }) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4, bottom: 8),
+                    child: Text(
+                      label,
+                      style: TextStyle(
+                        color: isRequirement ? headerPurple : Colors.grey[700],
+                        fontSize: 14,
+                        fontWeight: isRequirement ? FontWeight.bold : FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: isRequirement ? Border.all(color: headerPurple, width: 1.5) : null,
+                      boxShadow: [
+                        if (!isRequirement)
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.03),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          )
+                      ],
+                    ),
+                    child: TextField(
+                      maxLines: maxLines,
+                      onChanged: onChanged,
+                      decoration: InputDecoration(
+                        hintText: hint,
+                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              );
+            }
+
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
                 children: [
-                  TextField(
-                    decoration: const InputDecoration(labelText: 'Título'),
+                  buildCustomInput(
+                    label: 'Título',
+                    hint: 'Nueva convo',
                     onChanged: (value) => context.read<CreateOpportunityBloc>().add(TitleChanged(value)),
                   ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    decoration: const InputDecoration(labelText: 'Resumen (Summary)'), 
-                    onChanged: (value) => context.read<CreateOpportunityBloc>().add(SummaryChanged(value)), 
+                  buildCustomInput(
+                    label: 'Resumen (Summary)',
+                    hint: 'hola',
+                    onChanged: (value) => context.read<CreateOpportunityBloc>().add(SummaryChanged(value)),
                   ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    decoration: const InputDecoration(labelText: 'Descripción'),
-                    maxLines: 5,
+                  buildCustomInput(
+                    label: 'Descripción',
+                    hint: 'aqui que se pone',
+                    maxLines: 4,
                     onChanged: (value) => context.read<CreateOpportunityBloc>().add(DescriptionChanged(value)),
                   ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    decoration: const InputDecoration(labelText: 'Categoría'),
+                  buildCustomInput(
+                    label: 'Categoría',
+                    hint: 'FrontEnd',
                     onChanged: (value) => context.read<CreateOpportunityBloc>().add(CategoryChanged(value)),
                   ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'Requisitos',
-                      hintText: 'Separados por comas (ej. Dart, Flutter, Firebase)',
-                    ),
+                  buildCustomInput(
+                    label: 'Requisitos',
+                    hint: 'Vue, Node.js',
+                    isRequirement: true, // Applies purple border from image
                     onChanged: (value) => context.read<CreateOpportunityBloc>().add(RequirementsChanged(value)),
                   ),
+                  
                   const SizedBox(height: 32),
+
                   if (state.status == Status.loading)
                     const CircularProgressIndicator()
                   else
-                    ElevatedButton(
-                      onPressed: () => context.read<CreateOpportunityBloc>().add(FormSubmitted()),
-                      child: const Text('Guardar Borrador'),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: buttonPurple,
+                          foregroundColor: Colors.white,
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () =>
+                            context.read<CreateOpportunityBloc>().add(FormSubmitted()),
+                        child: const Text(
+                          'Guardar Borrador',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
                 ],
               ),

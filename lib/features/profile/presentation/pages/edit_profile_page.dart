@@ -137,6 +137,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    // Definición de colores
+    const Color primaryPurple = Color(0xFF673AB7);
+    const Color lightGrayBg = Color(0xFFF5F5F5);
+
     return BlocListener<ProfileBloc, ProfileState>(
       listener: (context, state) {
         if (state.status == Status.success) {
@@ -151,9 +155,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
         }
       },
       child: Scaffold(
+        backgroundColor: lightGrayBg, // 1. Fondo gris claro
         appBar: AppBar(
-          title: const Text('Editar Perfil'),
-          elevation: 0,
+          title: const Text(
+            'Editar Perfil',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          elevation: 4,
+          backgroundColor: primaryPurple, // 2. Encabezado Morado
+          foregroundColor: Colors.white,
+          // 3. Bordes redondeados inferiores
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(20),
+            ),
+          ),
         ),
         body: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, state) {
@@ -183,21 +200,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               ),
                               child: CircleAvatar(
                                 radius: 65,
-                                backgroundColor: Theme.of(context)
-                                    .primaryColor
-                                    .withOpacity(0.1),
+                                backgroundColor: primaryPurple.withOpacity(0.1),
                                 child: CircleAvatar(
                                   radius: 60,
-                                  backgroundColor: Colors.grey[200],
+                                  backgroundColor: Colors.white,
                                   backgroundImage: _getImageProvider(),
                                   child:
                                       _base64Image == null && _imageFile == null
                                           ? Icon(
                                               Icons.person,
                                               size: 60,
-                                              color: Theme.of(context)
-                                                  .primaryColor
-                                                  .withOpacity(0.5),
+                                              color: primaryPurple.withOpacity(0.5),
                                             )
                                           : null,
                                 ),
@@ -210,8 +223,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 elevation: 4,
                                 shape: const CircleBorder(),
                                 child: CircleAvatar(
-                                  backgroundColor:
-                                      Theme.of(context).primaryColor,
+                                  backgroundColor: primaryPurple,
                                   radius: 22,
                                   child: IconButton(
                                     icon: const Icon(Icons.camera_alt,
@@ -226,7 +238,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                       const SizedBox(height: 32),
 
-                      // Nombre
+                      // Campos de texto estilizados
                       _buildTextField(
                         controller: _nameController,
                         label: 'Nombre',
@@ -236,7 +248,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Teléfono
                       _buildTextField(
                         controller: _phoneController,
                         label: 'Teléfono',
@@ -246,7 +257,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Empresa
                       _buildTextField(
                         controller: _companyNameController,
                         label: 'Nombre de la Empresa',
@@ -255,7 +265,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Área de enfoque
                       _buildTextField(
                         controller: _focusAreaController,
                         label: 'Área de Enfoque',
@@ -264,7 +273,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Ubicación
                       _buildTextField(
                         controller: _locationController,
                         label: 'Ubicación',
@@ -273,7 +281,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Descripción
                       _buildTextField(
                         controller: _descriptionController,
                         label: 'Descripción',
@@ -289,6 +296,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
+                                  color: primaryPurple,
                                 ),
                       ),
                       const SizedBox(height: 12),
@@ -302,8 +310,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               enabled: !isLoading,
                               decoration: InputDecoration(
                                 hintText: 'Ej: Flutter, React, Node.js',
+                                filled: true,
+                                fillColor: Colors.white,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide.none,
                                 ),
                                 prefixIcon: const Icon(Icons.code),
                                 contentPadding: const EdgeInsets.symmetric(
@@ -317,7 +328,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             onPressed: isLoading ? null : _addTechnology,
                             icon: const Icon(Icons.add),
                             style: IconButton.styleFrom(
-                              backgroundColor: Theme.of(context).primaryColor,
+                              backgroundColor: primaryPurple,
                               foregroundColor: Colors.white,
                             ),
                           ),
@@ -337,12 +348,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               onDeleted: isLoading
                                   ? null
                                   : () => _removeTechnology(tech),
-                              backgroundColor: Theme.of(context)
-                                  .primaryColor
-                                  .withOpacity(0.1),
-                              labelStyle: TextStyle(
-                                color: Theme.of(context).primaryColor,
+                              backgroundColor: primaryPurple.withOpacity(0.1),
+                              labelStyle: const TextStyle(
+                                color: primaryPurple,
                                 fontWeight: FontWeight.w500,
+                              ),
+                              side: BorderSide.none,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
                               ),
                             );
                           }).toList(),
@@ -366,6 +379,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         label: Text(
                             isLoading ? 'Guardando...' : 'Guardar Cambios'),
                         style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryPurple,
+                          foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -394,6 +409,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     int maxLines = 1,
     bool enabled = true,
   }) {
+    const Color primaryPurple = Color(0xFF673AB7);
+
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
@@ -401,19 +418,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
       enabled: enabled,
       decoration: InputDecoration(
         labelText: required ? '$label *' : label,
+        filled: true,
+        fillColor: Colors.white, // Fondo blanco para los inputs
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey[300]!),
+          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide:
-              BorderSide(color: Theme.of(context).primaryColor, width: 2),
+          borderSide: const BorderSide(color: primaryPurple, width: 2),
         ),
-        prefixIcon: Icon(icon),
+        prefixIcon: Icon(icon, color: Colors.grey[600]),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         alignLabelWithHint: maxLines > 1,

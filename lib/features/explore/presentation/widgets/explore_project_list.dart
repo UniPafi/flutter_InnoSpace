@@ -8,22 +8,27 @@ import 'package:flutter_innospace/features/explore/presentation/blocs/explore_pr
 import 'package:flutter_innospace/features/explore/presentation/widgets/project_card.dart';
 
 class ExploreProjectList extends StatelessWidget {
-  final bool isFavoriteView; 
+  final bool isFavoriteView;
 
   const ExploreProjectList({super.key, required this.isFavoriteView});
 
   @override
   Widget build(BuildContext context) {
+    const Color primaryPurple = Color(0xFF673AB7);
+
     return BlocBuilder<ExploreBloc, ExploreState>(
-      buildWhen: (previous, current) => 
-          previous.status != current.status || previous.projects != current.projects,
+      buildWhen: (previous, current) =>
+          previous.status != current.status ||
+          previous.projects != current.projects,
       builder: (context, state) {
-        
         if (state.status == Status.loading && state.projects.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(primaryPurple),
+            ),
+          );
         }
 
-      
         if (state.status == Status.error) {
           return Center(
             child: Padding(
@@ -31,19 +36,25 @@ class ExploreProjectList extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline, color: Colors.redAccent, size: 48),
+                  const Icon(Icons.error_outline,
+                      color: Colors.redAccent, size: 60),
                   const SizedBox(height: 16),
                   Text(
                     'Error al cargar la lista: ${state.errorMessage}',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Theme.of(context).colorScheme.error),
+                    style: const TextStyle(color: Colors.grey),
                   ),
-                  const SizedBox(height: 16),
-                  
+                  const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () {
-                      context.read<ExploreBloc>().add(FetchProjects(isFavoriteView: isFavoriteView));
+                      context
+                          .read<ExploreBloc>()
+                          .add(FetchProjects(isFavoriteView: isFavoriteView));
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryPurple,
+                      foregroundColor: Colors.white,
+                    ),
                     child: const Text('Reintentar'),
                   ),
                 ],
@@ -51,7 +62,7 @@ class ExploreProjectList extends StatelessWidget {
             ),
           );
         }
-        
+
         final projectsToShow = state.projects;
 
         if (projectsToShow.isEmpty) {
@@ -60,26 +71,32 @@ class ExploreProjectList extends StatelessWidget {
               padding: const EdgeInsets.all(32.0),
               child: Text(
                 isFavoriteView
-                    ? 'Aún no has guardado proyectos como favoritos. ¡Explora para encontrar algunos!'
-                    : 'No se encontraron proyectos publicados en este momento.',
+                    ? 'Aún no has guardado proyectos como favoritos.'
+                    : 'No se encontraron proyectos publicados.',
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleMedium,
+                style: const TextStyle(fontSize: 16, color: Colors.grey),
               ),
             ),
           );
         }
 
         return RefreshIndicator(
+          color: primaryPurple,
           onRefresh: () async {
-            context.read<ExploreBloc>().add(FetchProjects(isFavoriteView: isFavoriteView));
-           
-            await context.read<ExploreBloc>().stream.firstWhere((s) => s.status != Status.loading);
+            context
+                .read<ExploreBloc>()
+                .add(FetchProjects(isFavoriteView: isFavoriteView));
+            await context
+                .read<ExploreBloc>()
+                .stream
+                .firstWhere((s) => s.status != Status.loading);
           },
           child: ListView.builder(
+            padding: const EdgeInsets.symmetric(vertical: 20),
             itemCount: projectsToShow.length,
             itemBuilder: (context, index) {
               final project = projectsToShow[index];
-              return ProjectCard(project: project); 
+              return ProjectCard(project: project);
             },
           ),
         );

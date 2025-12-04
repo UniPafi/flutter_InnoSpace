@@ -16,21 +16,33 @@ class OpportunityDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Colores
+    const Color headerColor = Color(0xFF7E57C2);
+    const Color backgroundColor = Color(0xFFEDE7F6);
+
     return BlocProvider<OpportunityDetailBloc>(
       create: (context) => OpportunityDetailBloc(
-    context.read<GetOpportunityByIdUseCase>(),
-    context.read<PublishOpportunityUseCase>(),
-    context.read<CloseOpportunityUseCase>(),
-    context.read<DeleteOpportunityUseCase>(),
-  )..add(FetchOpportunityDetail(opportunityId)), 
-  child: Scaffold(
+        context.read<GetOpportunityByIdUseCase>(),
+        context.read<PublishOpportunityUseCase>(),
+        context.read<CloseOpportunityUseCase>(),
+        context.read<DeleteOpportunityUseCase>(),
+      )..add(FetchOpportunityDetail(opportunityId)),
+      child: Scaffold(
+        backgroundColor: headerColor, // Fondo superior coincide con AppBar
         appBar: AppBar(
-          title: const Text('Detalle Convocatoria'),
+          title: const Text(
+            'Detalle del Proyecto',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          backgroundColor: headerColor,
+          foregroundColor: Colors.white,
+          elevation: 0,
         ),
         body: BlocConsumer<OpportunityDetailBloc, OpportunityDetailState>(
           listener: (context, state) {
             if (state.status == Status.error) {
-               ScaffoldMessenger.of(context)
+              ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(SnackBar(
                   content: Text('Error: ${state.errorMessage}'),
@@ -41,44 +53,113 @@ class OpportunityDetailPage extends StatelessWidget {
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(const SnackBar(
-                  content: Text('Convocatoria eliminada'),
+                  content: Text('Proyecto eliminado'),
                   backgroundColor: Colors.green,
                 ));
-              Navigator.of(context).pop(true); 
+              Navigator.of(context).pop(true);
             }
           },
           builder: (context, state) {
+            // Manejo de estados de carga y error
             if (state.status == Status.loading && state.opportunity == null) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state.opportunity == null && state.status != Status.loading) {
-              return const Center(child: Text('No se pudo cargar la convocatoria.'));
+              return Container(
+                color: backgroundColor,
+                child: const Center(child: CircularProgressIndicator()),
+              );
             }
             
-            final opportunity = state.opportunity;
-            if (opportunity == null) {
-              return const Center(child: CircularProgressIndicator());
+            // Verificación de nulidad corregida
+            final op = state.opportunity;
+            if (op == null) {
+              return Container(
+                color: backgroundColor,
+                child: const Center(child: Text('No se pudo cargar la información.')),
+              );
             }
 
-            return Stack(
-              children: [
-                Column(
-                  children: [
-                    Expanded(
-                      child: _buildContent(context, opportunity),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: _buildActionButtons(context, opportunity),
-                    ),
-                  ],
-                ),
-                if (state.status == Status.loading)
-                  Container(
-                    color: Colors.black.withValues(alpha: 0.3),
-                    child: const Center(child: CircularProgressIndicator()),
+            // Aquí usamos 'op' que ya verificamos que no es nulo
+            // Usamos un Container con bordes superiores redondeados para simular la card grande
+            return Container(
+              margin: const EdgeInsets.only(top: 10),
+              decoration: const BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+              ),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Título
+                      Text(
+                        op.title,
+                        style: const TextStyle(
+                          color: Color(0xFF673AB7),
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      
+                      // Estado y Categoría
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              op.status.name == 'DRAFT' ? 'Borrador' : op.status.name,
+                              style: TextStyle(color: Colors.grey[700], fontWeight: FontWeight.bold, fontSize: 12),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            op.category,
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 30),
+
+                      // Resumen
+                      const Text(
+                        'Resumen',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        op.summary.isNotEmpty ? op.summary : "Sin resumen",
+                        style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Descripción Detallada
+                      const Text(
+                        'Descripción Detallada',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF673AB7),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        op.description,
+                        style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+                      ),
+                      const SizedBox(height: 40),
+
+                      // Botones de Acción
+                      _buildActionButtons(context, op),
+                    ],
                   ),
-              ],
+                ),
+              ),
             );
           },
         ),
@@ -86,94 +167,27 @@ class OpportunityDetailPage extends StatelessWidget {
     );
   }
 
-  void _confirmDelete(BuildContext context) {
-    final bloc = context.read<OpportunityDetailBloc>();
-    
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('Confirmar Eliminación'),
-          content: const Text('¿Estás seguro de que deseas eliminar esta convocatoria? Esta acción no se puede deshacer.'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(foregroundColor: Colors.red),
-              child: const Text('Eliminar'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-                bloc.add(DeleteOpportunity());
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildContent(BuildContext context, Opportunity opportunity) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            opportunity.title,
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          const SizedBox(height: 16),
-          
-          Chip(
-            label: Text(opportunity.category.isNotEmpty ? opportunity.category : "Sin Categoría"),
-            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-            labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSecondaryContainer),
-          ),
-          const SizedBox(height: 16),
-          
-         
-          Text(
-            "Resumen: ${opportunity.summary}",
-             style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontStyle: FontStyle.italic, color: Colors.grey[700]),
-          ),
-          const SizedBox(height: 16),
-          const Divider(),
-          const SizedBox(height: 16),
-          Text(
-            "Descripción Completa:",
-             style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            opportunity.description,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          const SizedBox(height: 24),
-          Text(
-            'Requisitos:',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: 8),
-          for (var req in opportunity.requirements)
-            if (req.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
-                child: Text('• $req'),
-              ),
-          const SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
-
   Widget _buildActionButtons(BuildContext context, Opportunity opportunity) {
     final bloc = context.read<OpportunityDetailBloc>();
-    
     List<Widget> buttons = [];
+
+    // Estilo Botón Azul/Morado
+    ButtonStyle primaryButtonStyle = ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFF7986CB),
+      foregroundColor: Colors.white,
+      minimumSize: const Size(double.infinity, 55),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      elevation: 3,
+    );
+
+    // Estilo Botón Eliminar (Rosa pálido)
+    ButtonStyle deleteButtonStyle = ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFFFFCCBC),
+      foregroundColor: Colors.black87,
+      minimumSize: const Size(double.infinity, 55),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      elevation: 0,
+    );
 
     if (opportunity.status != OpportunityStatus.DRAFT) {
       buttons.add(
@@ -185,67 +199,47 @@ class OpportunityDetailPage extends StatelessWidget {
               ),
             );
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueAccent, // Un color distintivo
-            minimumSize: const Size(double.infinity, 40),
-          ),
-          child: const Text('Ver Postulantes'),
+          style: primaryButtonStyle,
+          child: const Text('Ver Postulantes', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
       );
-      buttons.add(const SizedBox(height: 12)); // Espaciado
+      buttons.add(const SizedBox(height: 16));
     }
 
     if (opportunity.status == OpportunityStatus.DRAFT) {
       buttons.add(
         ElevatedButton(
-          onPressed: () => bloc.add(PublishOpportunity()),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
-            minimumSize: const Size(double.infinity, 40),
-          ),
-          child: const Text('Publicar Convocatoria'),
+          onPressed: () {}, // Funcionalidad placeholder para editar
+          style: primaryButtonStyle,
+          child: const Text('Editar Proyecto', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
       );
-    }
+      buttons.add(const SizedBox(height: 16));
 
-    if (opportunity.status == OpportunityStatus.PUBLISHED) {
       buttons.add(
         ElevatedButton(
+          onPressed: () => bloc.add(PublishOpportunity()),
+          style: primaryButtonStyle.copyWith(backgroundColor: const MaterialStatePropertyAll(Color(0xFF7E57C2))),
+          child: const Text('Publicar Proyecto', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        ),
+      );
+    } else if (opportunity.status == OpportunityStatus.PUBLISHED) {
+       buttons.add(
+        ElevatedButton(
           onPressed: () => bloc.add(CloseOpportunity()),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.orange,
-            minimumSize: const Size(double.infinity, 40),
-          ),
-          child: const Text('Cerrar Convocatoria'),
+          style: primaryButtonStyle.copyWith(backgroundColor: const MaterialStatePropertyAll(Colors.orange)),
+          child: const Text('Marcar como Finalizado', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
       );
     }
+
+    if (buttons.isNotEmpty) buttons.add(const SizedBox(height: 16));
     
-    if (opportunity.status == OpportunityStatus.CLOSED) {
-      buttons.add(
-        Center(
-          child: Chip(
-            label: const Text('Convocatoria Cerrada'),
-            backgroundColor: Colors.grey[700],
-            labelStyle: const TextStyle(color: Colors.white),
-          ),
-        ),
-      );
-    }
-
-    if (buttons.isNotEmpty) {
-      buttons.add(const SizedBox(height: 12));
-    }
-
     buttons.add(
       ElevatedButton(
-        onPressed: () => _confirmDelete(context),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.redAccent[700],
-          foregroundColor: Colors.white,
-          minimumSize: const Size(double.infinity, 40),
-        ),
-        child: const Text('Eliminar Convocatoria'),
+        onPressed: () => _confirmDelete(context, bloc), // Pasar el bloc
+        style: deleteButtonStyle,
+        child: const Text('Eliminar Proyecto', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
       ),
     );
 
@@ -253,5 +247,22 @@ class OpportunityDetailPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: buttons,
     );
+  }
+
+  void _confirmDelete(BuildContext context, OpportunityDetailBloc bloc) {
+     showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Eliminar"),
+        content: const Text("¿Seguro que deseas eliminar este proyecto?"),
+        actions: [
+          TextButton(onPressed: ()=> Navigator.pop(ctx), child: const Text("Cancelar")),
+          TextButton(onPressed: () {
+            Navigator.pop(ctx);
+            bloc.add(DeleteOpportunity());
+          }, child: const Text("Eliminar", style: TextStyle(color: Colors.red))),
+        ],
+      ),
+     );
   }
 }
